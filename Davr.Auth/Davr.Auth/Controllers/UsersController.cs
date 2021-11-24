@@ -1,5 +1,6 @@
 using Davr.Auth.Authorization;
 using Davr.Auth.Entities;
+using Davr.Auth.Helpers;
 using Davr.Auth.Models.Users;
 using Davr.Auth.Services;
 using DavrBank.AuthorizationApi.Models.Users;
@@ -9,6 +10,7 @@ namespace Davr.Auth.Controllers
 {
     [Authorize]
     [ApiController]
+    [TypeFilter(typeof(ApiExceptionFilter))]
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
@@ -20,6 +22,7 @@ namespace Davr.Auth.Controllers
         }
 
         [AllowAnonymous]
+        [AutoValidate]
         [HttpPost("[action]")]
         public IActionResult Authenticate(AuthenticateRequest model)
         {
