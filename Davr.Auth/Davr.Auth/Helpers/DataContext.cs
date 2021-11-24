@@ -1,4 +1,5 @@
 ﻿
+using Davr.Auth.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -22,6 +23,6 @@ namespace Davr.Auth.Helpers
             options.UseNpgsql(x);
         }
 
-        public DbSet<WeatherForecast> Weathers { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

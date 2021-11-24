@@ -5,8 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Linq;
+using System.Text.Json.Serialization;
+using Davr.Auth.Authorization;
+using Davr.Auth.Entities;
 using Davr.Auth.Helpers;
+using Davr.Auth.Services;
 using Microsoft.EntityFrameworkCore;
+using BCryptNet = BCrypt.Net.BCrypt;
+
 
 namespace Davr.Auth
 {
@@ -25,11 +31,15 @@ namespace Davr.Auth
             services.AddDbContext<DataContext>();
             services.Configure<AppSettings>(Configuration.GetSection("ConnectionStrings"));
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(x =>
+            {
+                // serialize enums as strings in api responses (e.g. Role)
+                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
-
-
-
+            // configure DI for application services
+            services.AddScoped<IJwtUtils, JwtUtils>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -42,7 +52,29 @@ namespace Davr.Auth
         {
             dataContext.Database.Migrate();
 
-            if (!dataContext.Weathers.Any())
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            // global error handler
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
+
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            if (!dataContext.Users.Any())
             {
                 CreateBaseData(dataContext);
             }
@@ -53,25 +85,16 @@ namespace Davr.Auth
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Davr.Auth v1"));
             }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
         }
 
         private void CreateBaseData(DataContext context)
         {
-            context.Weathers.Add(new WeatherForecast()
-            {
-                Summary = "Ya perviy",
-            });
+            context.Users.Add(
+                new User
+                {
+                    FirstName = "Admin", LastName = "User", Username = "admin",
+                    PasswordHash = BCryptNet.HashPassword("admin"), Role = Role.Admin
+                });
 
             context.SaveChanges();
         }
