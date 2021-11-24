@@ -10,7 +10,7 @@ namespace Davr.Auth.Controllers
 {
     [Authorize]
     [ApiController]
-    [TypeFilter(typeof(ApiExceptionFilter))]
+    //[TypeFilter(typeof(ApiExceptionFilter))]
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace Davr.Auth.Controllers
         [AllowAnonymous]
         [AutoValidate]
         [HttpPost("[action]")]
-        public IActionResult Authenticate(AuthenticateRequest model)
+        public IActionResult Authenticate([FromBody]AuthenticateRequest model)
         {
             var response = _userService.Authenticate(model);
             return Ok(response);
@@ -51,7 +51,7 @@ namespace Davr.Auth.Controllers
         }
 
         [HttpPut("{regRequest}")]
-        public IActionResult Register(RegisterRequest newUser)
+        public IActionResult Register([FromBody] RegisterRequest newUser)
         {
             // only admins can register new users
             _userService.Register(newUser);

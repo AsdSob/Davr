@@ -11,5 +11,17 @@ namespace Davr.Auth.Helpers
                 throw new ValidationException();
 
         }
+
+
+        //model
+        //[Range(0, 999)]
+        //public double Weight { get; set; }
+
+        //[AutoValidate]
+        //[HttpPost("[action]")]
+        //public IActionResult ScaleWeight([FromBody] model model)
+        //{
+        //    return Ok(response);
+        //}
     }
 }
