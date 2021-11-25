@@ -1,6 +1,5 @@
 using Davr.Auth.Authorization;
 using Davr.Auth.Entities;
-using Davr.Auth.Helpers;
 using Davr.Auth.Models.Users;
 using Davr.Auth.Services;
 using DavrBank.AuthorizationApi.Models.Users;
@@ -10,7 +9,6 @@ namespace Davr.Auth.Controllers
 {
     [Authorize]
     [ApiController]
-    //[TypeFilter(typeof(ApiExceptionFilter))]
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
@@ -22,9 +20,8 @@ namespace Davr.Auth.Controllers
         }
 
         [AllowAnonymous]
-        [AutoValidate]
         [HttpPost("[action]")]
-        public IActionResult Authenticate([FromBody]AuthenticateRequest model)
+        public IActionResult Authenticate(AuthenticateRequest model)
         {
             var response = _userService.Authenticate(model);
             return Ok(response);
@@ -50,8 +47,8 @@ namespace Davr.Auth.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{regRequest}")]
-        public IActionResult Register([FromBody] RegisterRequest newUser)
+        [HttpPost("{regRequest}")]
+        public IActionResult Register([FromBody]RegisterRequest newUser)
         {
             // only admins can register new users
             _userService.Register(newUser);
