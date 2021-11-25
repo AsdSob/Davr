@@ -87,28 +87,22 @@ namespace Davr.Vash.DataAccess
             return entities;
         }
 
-
-        /// <summary>
-        /// Get total number of entity records
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public int GetEntitiesCount<T>() where T : class, IEntity<int>
-        {
-            var total = _context.Set<T>().Count();
-
-            return total;
-        }
-
-
         /// <summary>
         /// Get total number of entity records with expression
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public int GetEntitiesCount<T>(Expression<Func<T, bool>>? exp) where T : class, IEntity<int>
+        public int GetEntitiesCount<T>(Expression<Func<T, bool>> exp) where T : class, IEntity<int>
         {
-            var total = _context.Set<T>().Where(exp).Count();
+            var total = 0;
+            if (exp == null)
+            {
+                total = _context.Set<T>().Count();
+            }
+            else
+            {
+                total = _context.Set<T>().Where(exp).Count();
+            }
 
             return total;
         }
@@ -129,6 +123,34 @@ namespace Davr.Vash.DataAccess
             }
 
             var entities = await _context.Set<T>().Where(exp).ToListAsync();
+            return entities;
+        }
+
+        /// <summary>
+        /// Get Entities with expression, and skip quantity of records and take quantity of records
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="exp">expression</param>
+        /// <param name="skipQty">Skipping quantity</param>
+        /// <param name="takeQty">Taking quantity</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> GetEntities<T>(Expression<Func<T, bool>> exp, int? skipQty, int? takeQty) where T : class, IEntity<int>
+        {
+            var entities = new List<T>();
+
+            if (exp == null)
+            {
+                entities = await GetEntities<T>() as List<T>;
+            }
+            else
+            {
+                entities = await _context.Set<T>().Where(exp).ToListAsync();
+            }
+
+            if (skipQty != null && skipQty > 0) { entities = entities.Skip((int) skipQty) as List<T>; }
+
+            if (takeQty != null && takeQty > 0) { entities = entities.Take((int) takeQty) as List<T>; }
+
             return entities;
         }
 

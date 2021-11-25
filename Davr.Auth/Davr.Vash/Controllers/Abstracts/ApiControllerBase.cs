@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Davr.Vash.DataAccess;
-using Davr.Vash.DTOs;
 using Davr.Vash.Entities.Abstracts;
 using Davr.Vash.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -27,41 +25,33 @@ namespace Davr.Vash.Controllers.Abstracts
             _mapper = mapper;
         }
 
+        //sample of query with array object 
+        //localhost:44398/Currency/?pagesize=5&filters[0].f=name&filters[0].v=[lk]a&ilters[1].f=id&filters[1].v=[eq]a
 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
         {
+            //Set page response
+            var pageResponse = _pageResponseService.GetPageResponse<TDto>(pageRequest);
+
             //Convert filter array to expression
             var expression = pageRequest.filters.FiltersToExpression<TModel>();
 
             //Get entities filtered with expression
-            var models = await _dbContext.GetEntities(expression);
-
-            //var models = _dbContext._context.Currencies
-            //    .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
-            //    .Take(pageResponse.PageSize);
+            //var models = _dbContext._context.Currencies.Skip((pageResponse.Page - 1) * pageResponse.PageSize).Take(pageResponse.PageSize);
+            var models = await _dbContext.GetEntities(
+                expression,
+                (pageResponse.Page - 1) * pageResponse.PageSize,
+                pageResponse.PageSize);
 
             var dtos = _mapper.Map<IList<TDto>>(models).ToArray();
 
-
-            //Set page response
-            var pageResponse = _pageResponseService.GetPageResponse<TDto>(pageRequest);
-
-            if (expression == null)
-            {
-                pageResponse.Total = _dbContext.GetEntitiesCount<TModel>();
-            }
-            else
-            {
-                pageResponse.Total = _dbContext.GetEntitiesCount<TModel>(expression);
-            }
+            pageResponse.Total = _dbContext.GetEntitiesCount<TModel>(expression);
 
             pageResponse.Items = dtos;
 
             return Ok(pageResponse);
         }
-
-
 
 
         [HttpGet("{id}")]
