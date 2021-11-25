@@ -32,6 +32,7 @@ namespace Davr.Vash
             // configure DI for application services
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<IPageResponseService, PageResponseService>();
+            services.AddScoped<IFieldFilter, FieldFilter>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -54,6 +55,9 @@ namespace Davr.Vash
             }
 
             app.UseHttpsRedirection();
+
+            // global error handler
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseRouting();
 

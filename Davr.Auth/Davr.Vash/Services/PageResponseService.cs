@@ -8,19 +8,17 @@ namespace Davr.Vash.Services
     {
         PageResponseModel<TDto> GetPageResponse<TDto>(IEnumerable<TDto> dtos, int totalItems, PageRequestModel pageRequest);
         PageResponseModel<TDto> GetPageResponse<TDto>(IEnumerable<TDto> dtos, int totalItems);
+        PageResponseModel<TDto> GetPageResponse<TDto>(PageRequestModel pageRequest);
     }
 
     public class PageResponseService : IPageResponseService
     {
-
-        public PageResponseModel<TDto> GetPageResponse<TDto>(IEnumerable<TDto> items, int totalItems, PageRequestModel pageRequest)
+        public PageResponseModel<TDto> GetPageResponse<TDto>(PageRequestModel pageRequest)
         {
-           var pageResponse = new PageResponseModel<TDto>()
+            var pageResponse = new PageResponseModel<TDto>()
             {
                 Page = pageRequest.page == 0 ? 1 : pageRequest.page,
                 PageSize = pageRequest.pagesize == 0 ? 20 : pageRequest.pagesize,
-                Items = items.ToArray(),
-                Total = totalItems,
             };
 
             return pageResponse;
@@ -38,5 +36,19 @@ namespace Davr.Vash.Services
 
             return pageResponse;
         }
+
+        public PageResponseModel<TDto> GetPageResponse<TDto>(IEnumerable<TDto> items, int totalItems, PageRequestModel pageRequest)
+        {
+           var pageResponse = new PageResponseModel<TDto>()
+            {
+                Page = pageRequest.page == 0 ? 1 : pageRequest.page,
+                PageSize = pageRequest.pagesize == 0 ? 20 : pageRequest.pagesize,
+                Items = items.ToArray(),
+                Total = totalItems,
+            };
+
+            return pageResponse;
+        }
+
     }
 }

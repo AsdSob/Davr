@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -29,26 +30,30 @@ namespace Davr.Vash.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PageRequestModel pageRequest)
         {
-            var models = _dbContext.Currencies
-                .Skip((pageRequest.page - 1) * pageRequest.pagesize)
-                .Take(pageRequest.pagesize);
+            var pageResponse = _pageResponseService.GetPageResponse<CurrencyDto>(pageRequest);
 
-            var totalItems = _dbContext.Currencies.CountAsync();
+            var models = _dbContext.Currencies
+                .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+                .Take(pageResponse.PageSize);
 
             var dtos = _mapper.Map<IList<CurrencyDto>>(models).ToArray();
 
-            var pageResponse = _pageResponseService.GetPageResponse<CurrencyDto>(dtos, totalItems.Result, pageRequest);
+            pageResponse.Total = await _dbContext.Currencies.CountAsync();
+            pageResponse.Items = dtos;
 
             return Ok(pageResponse);
         }
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromBody] int id)
+        public async Task<IActionResult> GetById( int id)
         {
             var model = _dbContext.Currencies.Find(id);
+            if (model == null) throw new Exception("Not exist");
 
-            return Ok(model);
+            var dto = _mapper.Map<CurrencyDto>(model);
+
+            return Ok(dto);
         }
 
         [HttpPost]
@@ -73,10 +78,15 @@ namespace Davr.Vash.Controllers
             return Ok();
         }
 
-        [HttpDelete]
-        public virtual async Task<IActionResult> Delete([FromBody] CurrencyDto tDto)
+        [HttpDelete("{id}")]
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            var model = _mapper.Map<Currency>(tDto);
+            var model = await _dbContext.FindAsync<Currency>(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
 
             _dbContext.Currencies.Remove(model);
             _dbContext.SaveChanges();
