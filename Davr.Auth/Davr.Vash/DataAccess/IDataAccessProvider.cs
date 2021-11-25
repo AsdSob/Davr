@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Davr.Vash.Entities.Abstracts;
+using Davr.Vash.Helpers;
 
 namespace Davr.Vash.DataAccess
 {
     public interface IDataAccessProvider
     {
+        public DataContext _context { get; set; }
+
         Task AddEntities<T>(IEnumerable<T> entity) where T : class, IEntity<int>;
 
         Task UpdateEntities<T>(IEnumerable<T> entity) where T : class, IEntity<int>;

@@ -11,7 +11,7 @@ namespace Davr.Vash.DataAccess
 {
     public class DataAccessProvider : IDataAccessProvider
     {
-        private readonly DataContext _context;
+        public DataContext _context { get; set; }
 
         public DataAccessProvider(DataContext context)
         {
@@ -19,6 +19,7 @@ namespace Davr.Vash.DataAccess
         }
 
         #region Base DataAccess
+
 
         /// <summary>
         /// Add T type entities 
@@ -140,5 +141,6 @@ namespace Davr.Vash.DataAccess
         {
             await DeleteEntities(new T[] { entity });
         }
+
     }
 }
