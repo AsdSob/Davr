@@ -31,9 +31,9 @@ namespace Davr.Vash.Services
 
             for (int i = 0; i < filters.Length; i++)
             {
-                var expProperty = Expression.Property(expParameter, filters[i].Field.ToLower());
-                var expValue = GetConstantByMemberType(expProperty, filters[i].Value);
-                var oper = filters[i].Value.Substring(1, filters[i].Value.IndexOf(']') - 1);
+                var expProperty = Expression.Property(expParameter, filters[i].f.ToLower());
+                var expValue = GetConstantByMemberType(expProperty, filters[i].v);
+                var oper = filters[i].v.Substring(1, filters[i].v.IndexOf(']') - 1);
 
                 var expTemp = oper switch
                 {

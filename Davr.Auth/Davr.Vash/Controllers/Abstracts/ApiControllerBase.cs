@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Vash.Controllers.Abstracts
 {
+    [ApiController]
+    [Route("[controller]")]
     public class ApiControllerBase<TModel, TDto> : ControllerBase where TModel : class, IEntity<int>
     {
         protected readonly IPageResponseService _pageResponseService;
@@ -24,6 +26,43 @@ namespace Davr.Vash.Controllers.Abstracts
             _dbContext = dbContext;
             _mapper = mapper;
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
+        {
+            //Convert filter array to expression
+            var expression = pageRequest.filters.FiltersToExpression<TModel>();
+
+            //Get entities filtered with expression
+            var models = await _dbContext.GetEntities(expression);
+
+            //var models = _dbContext._context.Currencies
+            //    .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+            //    .Take(pageResponse.PageSize);
+
+            var dtos = _mapper.Map<IList<TDto>>(models).ToArray();
+
+
+            //Set page response
+            var pageResponse = _pageResponseService.GetPageResponse<TDto>(pageRequest);
+
+            if (expression == null)
+            {
+                pageResponse.Total = _dbContext.GetEntitiesCount<TModel>();
+            }
+            else
+            {
+                pageResponse.Total = _dbContext.GetEntitiesCount<TModel>(expression);
+            }
+
+            pageResponse.Items = dtos;
+
+            return Ok(pageResponse);
+        }
+
+
+
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)

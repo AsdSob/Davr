@@ -87,6 +87,32 @@ namespace Davr.Vash.DataAccess
             return entities;
         }
 
+
+        /// <summary>
+        /// Get total number of entity records
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public int GetEntitiesCount<T>() where T : class, IEntity<int>
+        {
+            var total = _context.Set<T>().Count();
+
+            return total;
+        }
+
+
+        /// <summary>
+        /// Get total number of entity records with expression
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public int GetEntitiesCount<T>(Expression<Func<T, bool>>? exp) where T : class, IEntity<int>
+        {
+            var total = _context.Set<T>().Where(exp).Count();
+
+            return total;
+        }
+
         /// <summary>
         /// Get entities with sql filter
         /// </summary>

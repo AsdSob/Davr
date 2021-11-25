@@ -24,6 +24,6 @@ namespace Davr.Vash.Services
         /// <summary>
         /// Filters
         /// </summary> 
-        public FieldFilter[] Filters { get; set; }
+        public FieldFilter[] filters { get; set; }
     }
 }

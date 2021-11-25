@@ -34,6 +34,7 @@ namespace Davr.Vash
             services.AddScoped<IPageResponseService, PageResponseService>();
             services.AddScoped<IFieldFilter, FieldFilter>();
 
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSwaggerGen(c =>

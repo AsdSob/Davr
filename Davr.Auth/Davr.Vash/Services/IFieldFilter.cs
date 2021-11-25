@@ -11,8 +11,8 @@ namespace Davr.Vash.Services
     public class FieldFilter : IFieldFilter
     {
         [Required(AllowEmptyStrings = false)]
-        public string Field { get; set; }
+        public string f { get; set; }
 
-        public string Value { get; set; }
+        public string v { get; set; }
     }
 }

@@ -1,51 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Davr.Vash.Controllers.Abstracts;
 using Davr.Vash.DataAccess;
 using Davr.Vash.DTOs;
 using Davr.Vash.Entities;
-using Davr.Vash.Helpers;
 using Davr.Vash.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Davr.Vash.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
     public class CurrencyController : ApiControllerBase<Currency,CurrencyDto>
     {
-        protected readonly IPageResponseService _pageResponseService;
-        protected readonly IDataAccessProvider _dbContext;
-        protected readonly IMapper _mapper;
-
         public CurrencyController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
         {
-            _pageResponseService = pageService;
-            _dbContext = dbContext;
-            _mapper = mapper;
+
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] PageRequestModel pageRequest)
-        {
-            var pageResponse = _pageResponseService.GetPageResponse<CurrencyDto>(pageRequest);
+        //[HttpGet]
+        //public async Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
+        //{
+        //    var pageResponse = _pageResponseService.GetPageResponse<CurrencyDto>(pageRequest);
 
-            var models = _dbContext._context.Currencies
-                .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
-                .Take(pageResponse.PageSize);
+        //    var expression = pageRequest.filters.FiltersToExpression<Currency>();
 
-            var dtos = _mapper.Map<IList<CurrencyDto>>(models).ToArray();
+        //    var models = _dbContext._context.Currencies
+        //        .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+        //        .Take(pageResponse.PageSize);
 
-            pageResponse.Total = await _dbContext._context.Currencies.CountAsync();
-            pageResponse.Items = dtos;
+        //    var dtos = _mapper.Map<IList<CurrencyDto>>(models).ToArray();
 
-            return Ok(pageResponse);
-        }
+        //    pageResponse.Total = await _dbContext._context.Currencies.CountAsync();
+        //    pageResponse.Items = dtos;
 
+        //    return Ok(pageResponse);
+        //}
 
         //[HttpGet("{id}")]
         //public async Task<IActionResult> GetById( int id)
