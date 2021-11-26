@@ -6,10 +6,12 @@ using Davr.Vash.Authorization;
 using Davr.Vash.DataAccess;
 using Davr.Vash.Entities.Abstracts;
 using Davr.Vash.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Vash.Controllers.Abstracts
 {
+    [EnableCors("CorsApi")]
     [Authorize]
     [ApiController]
     [Route("[controller]")]

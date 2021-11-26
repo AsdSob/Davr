@@ -6,10 +6,12 @@ using Davr.Vash.DTOs;
 using Davr.Vash.DTOs.Users;
 using Davr.Vash.Entities;
 using Davr.Vash.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Vash.Controllers
 {
+    [EnableCors("CorsApi")]
     [Authorize]
     [ApiController]
     [Route("[controller]")]
