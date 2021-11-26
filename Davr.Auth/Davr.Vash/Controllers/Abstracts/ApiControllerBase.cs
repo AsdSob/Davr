@@ -75,30 +75,30 @@ namespace Davr.Vash.Controllers.Abstracts
             return Ok();
         }
 
-        //[HttpPost]
-        //public virtual async Task<IActionResult> AddRange([FromBody] IList<TDto> tDto)
-        //{
-        //    var models = _mapper.Map<IList<TModel>>(tDto);
-        //    await _dbContext.AddOrUpdateEntities(models);
-        //    return Ok();
-        //}
-
-        [HttpPut]
-        public virtual async Task<IActionResult> Update([FromBody] TDto tDto)
+        [HttpPut("{id}")]
+        public virtual async Task<IActionResult> Update(int id, [FromBody] TDto tDto)
         {
-            var model = _mapper.Map<TModel>(tDto);
+            if (tDto == null)
+            {
+                return BadRequest("Owner object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid model object");
+            }
+
+            var entity = _dbContext.GetEntity<TModel>(id);
+
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            var model = _mapper.Map(tDto, entity).Result;
             await _dbContext.AddOrUpdateEntity(model);
             return Ok();
         }
-
-        //[HttpPut]
-        //public virtual async Task<IActionResult> UpdateRange([FromBody] IList<TDto> tDto)
-        //{
-        //    var models = _mapper.Map<IList<TModel>>(tDto);
-        //    await _dbContext.AddOrUpdateEntities(models);
-        //    return Ok();
-        //}
-
 
         [HttpDelete("{id}")]
         public virtual async Task<IActionResult> Delete(int id)
@@ -113,14 +113,5 @@ namespace Davr.Vash.Controllers.Abstracts
             await _dbContext.DeleteEntity(model);
             return Ok();
         }
-
-        //[HttpDelete]
-        //public virtual async Task<IActionResult> DeleteRange([FromBody] IList<TDto> tDto)
-        //{
-        //    var model = _mapper.Map<IList<TModel>>(tDto);
-
-        //    await _dbContext.DeleteEntities(model);
-        //    return Ok();
-        //}
     }
 }

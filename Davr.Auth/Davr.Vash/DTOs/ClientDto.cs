@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Davr.Vash.DTOs
 {
     public class ClientDto
     {
+        [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
         public string SurName { get; set; }
         public string MiddleSurName { get; set; }
