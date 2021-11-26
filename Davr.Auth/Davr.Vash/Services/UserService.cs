@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Davr.Vash.Authorization;
+using Davr.Vash.DTOs.Users;
 using Davr.Vash.Entities;
 using Davr.Vash.Helpers;
-using Davr.Vash.Models.Users;
 using Microsoft.Extensions.Options;
 using BCryptNet = BCrypt.Net.BCrypt;
 
@@ -79,6 +79,7 @@ namespace Davr.Vash.Services
                 MiddleName = model.MiddleName,
                 Role = model.Role,
                 Username = model.Username,
+                BranchId = model.BranchId,
             };
 
             // hash password

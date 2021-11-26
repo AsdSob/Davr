@@ -28,5 +28,6 @@ namespace Davr.Vash.Helpers
         public DbSet<Citizen> Citizens { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Branch> Branches { get; set; }
     }
 }

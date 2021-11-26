@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Davr.Vash.Entities.Abstracts;
 
 namespace Davr.Vash.Entities
@@ -7,6 +8,7 @@ namespace Davr.Vash.Entities
     {
         public double Rate { get; set; }
 
+        [Required]
         public int CurrencyId { get; set; }
 
         public virtual Currency Currency { get; set; }

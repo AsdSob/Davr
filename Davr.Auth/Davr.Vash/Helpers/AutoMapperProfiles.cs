@@ -8,18 +8,18 @@ namespace Davr.Vash.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<Currency, CurrencyDto>();
-            CreateMap<CurrencyDto, Currency>();
+            CreateMap<Currency, CurrencyDto>().ReverseMap();
 
-            CreateMap<CurrencyRate, CurrencyRateDto>();
-            CreateMap<CurrencyRateDto, CurrencyRate>();
+            CreateMap<CurrencyRate, CurrencyRateDto>().ReverseMap();
 
-            CreateMap<Citizen, CitizenDto>();
-            CreateMap<CitizenDto, Citizen>();
+            CreateMap<Citizen, CitizenDto>().ReverseMap();
 
-            CreateMap<DocumentTypeDto, DocumentType>();
-            CreateMap<DocumentType, DocumentTypeDto>();
+            CreateMap<DocumentType, DocumentTypeDto>().ReverseMap();
 
+            CreateMap<Branch, BranchDto>().ReverseMap();
+
+            CreateMap<Client, ClientDto>();
         }
+
     }
 }

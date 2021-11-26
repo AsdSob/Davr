@@ -17,5 +17,8 @@ namespace Davr.Vash.DTOs
 
         public int DocumentTypeId { get; set; }
         public int CitizenId { get; set; }
+
+        public CitizenDto Citizen { get; set; }
+        public DocumentTypeDto DocumentType { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 using Davr.Vash.Entities;
 
-namespace Davr.Vash.Models.Users
+namespace Davr.Vash.DTOs.Users
 {
     public class AuthenticateResponse
     {

@@ -10,8 +10,13 @@ namespace Davr.Vash.Entities
         public string LastName { get; set; }
         public string Username { get; set; }
         public Role Role { get; set; }
+        
+        
+        public int? BranchId { get; set; }
 
         [JsonIgnore]
         public string PasswordHash { get; set; }
+
+        public virtual Branch Branch { get; set; }
     }
 }

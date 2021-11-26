@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Davr.Vash.Entities;
 
-namespace Davr.Vash.Models.Users
+namespace Davr.Vash.DTOs.Users
 {
     public class RegisterRequest
     {
@@ -15,6 +15,7 @@ namespace Davr.Vash.Models.Users
         public string Username { get; set; }        
         
         public string MiddleName { get; set; }
+        public int BranchId { get; set; }
 
         [Required]
         public string Password { get; set; }

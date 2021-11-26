@@ -31,7 +31,7 @@ namespace Davr.Vash.Controllers.Abstracts
         //localhost:44398/Currency/?pagesize=5&filters[0].f=name&filters[0].v=[lk]a&ilters[1].f=id&filters[1].v=[eq]a
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
+        public virtual async Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
         {
             //Set page response
             var pageResponse = _pageResponseService.GetPageResponse<TDto>(pageRequest);
@@ -54,7 +54,6 @@ namespace Davr.Vash.Controllers.Abstracts
 
             return Ok(pageResponse);
         }
-
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)

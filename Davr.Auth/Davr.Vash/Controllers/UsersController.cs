@@ -1,6 +1,6 @@
 using Davr.Vash.Authorization;
+using Davr.Vash.DTOs.Users;
 using Davr.Vash.Entities;
-using Davr.Vash.Models.Users;
 using Davr.Vash.Services;
 using Microsoft.AspNetCore.Mvc;
 
