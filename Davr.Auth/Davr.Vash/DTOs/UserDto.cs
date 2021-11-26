@@ -1,9 +1,13 @@
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using Davr.Vash.Entities;
 
-namespace Davr.Vash.Entities
+namespace Davr.Vash.DTOs
 {
-    public class User
+    public class UserDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -12,15 +16,8 @@ namespace Davr.Vash.Entities
         public string Username { get; set; }
         public Role Role { get; set; }
         
-        
         public int? BranchId { get; set; }
-
-        [JsonIgnore]
-        public string PasswordHash { get; set; }
-
+        
         public virtual Branch Branch { get; set; }
-
-        public ICollection<ExchangeTransaction> ExchangeTransactions { get; set; }
-
     }
 }

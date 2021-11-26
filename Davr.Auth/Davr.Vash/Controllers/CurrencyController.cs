@@ -1,9 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using AutoMapper;
+using Davr.Vash.Authorization;
 using Davr.Vash.Controllers.Abstracts;
 using Davr.Vash.DataAccess;
 using Davr.Vash.DTOs;
 using Davr.Vash.Entities;
 using Davr.Vash.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Vash.Controllers
 {
@@ -14,74 +17,38 @@ namespace Davr.Vash.Controllers
 
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
-        //{
-        //    var pageResponse = _pageResponseService.GetPageResponse<CurrencyDto>(pageRequest);
+        [HttpGet]
+        public override Task<IActionResult> GetAll(PageRequestFilter pageRequest)
+        {
+            return base.GetAll(pageRequest);
+        }
 
-        //    var expression = pageRequest.filters.FiltersToExpression<Currency>();
+        [HttpGet("{id}")]
+        public override Task<IActionResult> Get(int id)
+        {
+            return base.Get(id);
+        }
 
-        //    var models = _dbContext._context.Currencies
-        //        .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
-        //        .Take(pageResponse.PageSize);
+        [Authorize(Role.Admin)]
+        [HttpPost]
+        public override Task<IActionResult> Add(CurrencyDto tDto)
+        {
+            return base.Add(tDto);
+        }
 
-        //    var dtos = _mapper.Map<IList<CurrencyDto>>(models).ToArray();
+        [Authorize(Role.Admin)]
+        [HttpDelete("{id}")]
+        public override Task<IActionResult> Delete(int id)
+        {
+            return base.Delete(id);
+        }
 
-        //    pageResponse.Total = await _dbContext._context.Currencies.CountAsync();
-        //    pageResponse.Items = dtos;
-
-        //    return Ok(pageResponse);
-        //}
-
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetById( int id)
-        //{
-        //    var model = _dbContext.Currencies.Find(id);
-
-        //    if (model == null) throw new Exception("Not exist");
-
-        //    var dto = _mapper.Map<CurrencyDto>(model);
-
-        //    return Ok(dto);
-        //}
-
-        //[HttpPost]
-        //public virtual async Task<IActionResult> Add([FromBody] CurrencyDto tDto)
-        //{
-        //    var model = _mapper.Map<Currency>(tDto);
-
-        //    _dbContext.Currencies.Add(model);
-        //    _dbContext.SaveChanges();
-
-        //    return Ok();
-        //}
-
-        //[HttpPut]
-        //public virtual async Task<IActionResult> Update([FromBody] CurrencyDto tDto)
-        //{
-        //    var model = _mapper.Map<Currency>(tDto);
-
-        //    _dbContext.Currencies.Update(model);
-        //    _dbContext.SaveChanges();
-
-        //    return Ok();
-        //}
-
-        //[HttpDelete("{id}")]
-        //public virtual async Task<IActionResult> Delete(int id)
-        //{
-        //    var model = await _dbContext.FindAsync<Currency>(id);
-
-        //    if (model == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _dbContext.Currencies.Remove(model);
-        //    _dbContext.SaveChanges();
-
-        //    return Ok();
-        //}
+        [Authorize(Role.Admin)]
+        [HttpPut("{id}")]
+        public override Task<IActionResult> Update(int id, CurrencyDto tDto)
+        {
+            return base.Update(id, tDto);
+        }
 
     }
 }

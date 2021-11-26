@@ -1,4 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using Davr.Vash.Authorization;
+using Davr.Vash.DTOs;
 using Davr.Vash.DTOs.Users;
 using Davr.Vash.Entities;
 using Davr.Vash.Services;
@@ -12,10 +16,12 @@ namespace Davr.Vash.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
+        private IMapper _mapper;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -30,7 +36,8 @@ namespace Davr.Vash.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = _userService.GetAll();
+            var models = _userService.GetAll();
+            var users = _mapper.Map<IList<UserDto>>(models).ToArray();
             return Ok(users);
         }
 
@@ -42,7 +49,10 @@ namespace Davr.Vash.Controllers
             if (id != currentUser.Id && currentUser.Role != Role.Admin)
                 return Unauthorized(new { message = "Unauthorized" });
 
-            var user =  _userService.GetById(id);
+            var model =  _userService.GetById(id);
+
+            var user = _mapper.Map<UserDto>(model);
+
             return Ok(user);
         }
 

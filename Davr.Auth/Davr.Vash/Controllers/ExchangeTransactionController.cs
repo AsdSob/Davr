@@ -13,27 +13,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Davr.Vash.Controllers
 {
-    public class CurrencyRateController : ApiControllerBase<CurrencyRate, CurrencyRateDto>
+    public class ExchangeTransactionController : ApiControllerBase<ExchangeTransaction, ExchangeTransactionDto>
     {
-        public CurrencyRateController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
+        public ExchangeTransactionController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
         {
         }
 
         [HttpGet]
-        public override async Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
+        public override async Task<IActionResult> GetAll(PageRequestFilter pageRequest)
         {
             //Set page response
-            var pageResponse = _pageResponseService.GetPageResponse<CurrencyRateDto>(pageRequest);
+            var pageResponse = _pageResponseService.GetPageResponse<ExchangeTransactionDto>(pageRequest);
 
             //Convert filter array to expression
-            var expression = pageRequest.filters.FiltersToExpression<CurrencyRate>();
+            var expression = pageRequest.filters.FiltersToExpression<ExchangeTransaction>();
 
             //Get entities filtered with expression
-            var models = _dbContext._context.CurrencyRates.Skip((pageResponse.Page - 1) * pageResponse.PageSize).Take(pageResponse.PageSize).Include(x=> x.Currency);
+            var models = _dbContext._context.ExchangeTransactions
+                .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+                .Take(pageResponse.PageSize);
 
-            var dtos = _mapper.Map<IList<CurrencyRateDto>>(models).ToArray();
+            var dtos = _mapper.Map<IList<ExchangeTransactionDto>>(models).ToArray();
 
-            pageResponse.Total = _dbContext.GetEntitiesCount<CurrencyRate>(expression);
+            pageResponse.Total = _dbContext.GetEntitiesCount<ExchangeTransaction>(expression);
 
             pageResponse.Items = dtos;
 
@@ -46,9 +48,8 @@ namespace Davr.Vash.Controllers
             return base.Get(id);
         }
 
-        [Authorize(Role.Admin)]
         [HttpPost]
-        public override Task<IActionResult> Add(CurrencyRateDto tDto)
+        public override Task<IActionResult> Add(ExchangeTransactionDto tDto)
         {
             return base.Add(tDto);
         }
@@ -62,7 +63,7 @@ namespace Davr.Vash.Controllers
 
         [Authorize(Role.Admin)]
         [HttpPut("{id}")]
-        public override Task<IActionResult> Update(int id, CurrencyRateDto tDto)
+        public override Task<IActionResult> Update(int id, ExchangeTransactionDto tDto)
         {
             return base.Update(id, tDto);
         }

@@ -88,14 +88,14 @@ namespace Davr.Vash.Controllers.Abstracts
                 return BadRequest("Invalid model object");
             }
 
-            var entity = _dbContext.GetEntity<TModel>(id);
+            var entity = _dbContext.GetEntity<TModel>(id).Result;
 
             if (entity == null)
             {
                 return NotFound();
             }
 
-            var model = _mapper.Map(tDto, entity).Result;
+            var model = _mapper.Map(tDto, entity);
             await _dbContext.AddOrUpdateEntity(model);
             return Ok();
         }

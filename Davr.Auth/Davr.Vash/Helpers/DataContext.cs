@@ -29,5 +29,6 @@ namespace Davr.Vash.Helpers
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Branch> Branches { get; set; }
+        public DbSet<ExchangeTransaction> ExchangeTransactions { get; set; }
     }
 }

@@ -13,27 +13,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Davr.Vash.Controllers
 {
-    public class CurrencyRateController : ApiControllerBase<CurrencyRate, CurrencyRateDto>
+    public class ClientController : ApiControllerBase<Client, ClientDto>
     {
-        public CurrencyRateController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
+        public ClientController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
         {
+
         }
 
         [HttpGet]
         public override async Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
         {
             //Set page response
-            var pageResponse = _pageResponseService.GetPageResponse<CurrencyRateDto>(pageRequest);
+            var pageResponse = _pageResponseService.GetPageResponse<ClientDto>(pageRequest);
 
             //Convert filter array to expression
-            var expression = pageRequest.filters.FiltersToExpression<CurrencyRate>();
+            var expression = pageRequest.filters.FiltersToExpression<Client>();
 
             //Get entities filtered with expression
-            var models = _dbContext._context.CurrencyRates.Skip((pageResponse.Page - 1) * pageResponse.PageSize).Take(pageResponse.PageSize).Include(x=> x.Currency);
+            var models = _dbContext._context.Clients.Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+                .Take(pageResponse.PageSize).Include(x => x.DocumentType).Include(x => x.Citizen);
 
-            var dtos = _mapper.Map<IList<CurrencyRateDto>>(models).ToArray();
+            var dtos = _mapper.Map<IList<ClientDto>>(models).ToArray();
 
-            pageResponse.Total = _dbContext.GetEntitiesCount<CurrencyRate>(expression);
+            pageResponse.Total = _dbContext.GetEntitiesCount<Client>(expression);
 
             pageResponse.Items = dtos;
 
@@ -46,9 +48,8 @@ namespace Davr.Vash.Controllers
             return base.Get(id);
         }
 
-        [Authorize(Role.Admin)]
         [HttpPost]
-        public override Task<IActionResult> Add(CurrencyRateDto tDto)
+        public override Task<IActionResult> Add(ClientDto tDto)
         {
             return base.Add(tDto);
         }
@@ -62,7 +63,7 @@ namespace Davr.Vash.Controllers
 
         [Authorize(Role.Admin)]
         [HttpPut("{id}")]
-        public override Task<IActionResult> Update(int id, CurrencyRateDto tDto)
+        public override Task<IActionResult> Update(int id, ClientDto tDto)
         {
             return base.Update(id, tDto);
         }

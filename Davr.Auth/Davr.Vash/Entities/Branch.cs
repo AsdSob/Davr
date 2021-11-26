@@ -9,6 +9,8 @@ namespace Davr.Vash.Entities
         [Required]
         public string Name { get; set; }
 
-        public ICollection<User> CurrencyRates { get; set; }
+        public ICollection<User> Users { get; set; }
+        public ICollection<ExchangeTransaction> ExchangeTransactions { get; set; }
+
     }
 }
