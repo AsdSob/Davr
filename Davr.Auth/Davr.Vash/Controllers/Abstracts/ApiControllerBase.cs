@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Davr.Vash.Authorization;
 using Davr.Vash.DataAccess;
 using Davr.Vash.Entities.Abstracts;
 using Davr.Vash.Services;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Vash.Controllers.Abstracts
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ApiControllerBase<TModel, TDto> : ControllerBase where TModel : class, IEntity<int>

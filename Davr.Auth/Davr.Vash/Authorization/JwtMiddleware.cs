@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using Davr.Vash.Helpers;
+using Davr.Vash.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace Davr.Vash.Helpers
+namespace Davr.Vash.Authorization
 {
     public class JwtMiddleware
     {
@@ -20,22 +18,15 @@ namespace Davr.Vash.Helpers
             _appSettings = appSettings.Value;
         }
 
-        public async Task Invoke(HttpContext context, IJwtUtils jwtUtils)
+        public async Task Invoke(HttpContext context, IUserService userService, IJwtUtils jwtUtils)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var userId = jwtUtils.ValidateJwtToken(token);
             if (userId != null)
             {
                 // attach user to context on successful jwt validation
-                //context.Items["User"] = userService.GetById(userId.Value);
+                context.Items["User"] = userService.GetById(userId.Value);
             }
-            else
-            {
-                context.Abort();
-
-                //throw new Exception();
-            }
-
 
             await _next(context);
         }

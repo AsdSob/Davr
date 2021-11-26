@@ -1,5 +1,9 @@
 using System;
+using System.Linq;
+using System.Text.Json.Serialization;
+using Davr.Vash.Authorization;
 using Davr.Vash.DataAccess;
+using Davr.Vash.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Davr.Vash.Helpers;
 using Davr.Vash.Services;
 using Microsoft.EntityFrameworkCore;
+using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace Davr.Vash
 {
@@ -27,13 +32,18 @@ namespace Davr.Vash
             services.AddDbContext<DataContext>();
             services.Configure<AppSettings>(Configuration.GetSection("ConnectionStrings"));
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(x =>
+            {
+                // serialize enums as strings in api responses (e.g. Role)
+                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
             // configure DI for application services
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<IPageResponseService, PageResponseService>();
             services.AddScoped<IFieldFilter, FieldFilter>();
             services.AddScoped<IJwtUtils, JwtUtils>();
+            services.AddScoped<IUserService, UserService>();
 
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -72,6 +82,27 @@ namespace Davr.Vash
             {
                 endpoints.MapControllers();
             });
+
+
+            if (!dataContext.Users.Any())
+            {
+                CreateBaseData(dataContext);
+            }
+        }
+
+        private void CreateBaseData(DataContext context)
+        {
+            context.Users.Add(
+                new User
+                {
+                    FirstName = "Admin",
+                    LastName = "User",
+                    Username = "admin",
+                    PasswordHash = BCryptNet.HashPassword("admin"),
+                    Role = Role.Admin
+                });
+
+            context.SaveChanges();
         }
     }
 }

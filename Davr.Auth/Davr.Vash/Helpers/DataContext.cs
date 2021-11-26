@@ -22,6 +22,7 @@ namespace Davr.Vash.Helpers
             options.UseNpgsql(x);
         }
 
+        public DbSet<User> Users { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<CurrencyRate> CurrencyRates { get; set; }
         public DbSet<Citizen> Citizens { get; set; }

@@ -144,12 +144,16 @@ namespace Davr.Vash.DataAccess
             }
             else
             {
-                entities = await _context.Set<T>().Where(exp).ToListAsync();
+                entities = await _context.Set<T>().Where(exp).Skip((int) skipQty).Take((int) takeQty).ToListAsync();
             }
 
-            if (skipQty != null && skipQty > 0) { entities = entities.Skip((int) skipQty) as List<T>; }
+            //if (skipQty != null && skipQty > 0) { entities = entities.Skip((int) skipQty) as List<T>; }
 
-            if (takeQty != null && takeQty > 0) { entities = entities.Take((int) takeQty) as List<T>; }
+            //if (takeQty != null && takeQty > 0)
+            //{
+            //    entities = entities.Take((int) takeQty) as List<T>; 
+
+            //}
 
             return entities;
         }
