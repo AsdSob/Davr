@@ -33,6 +33,7 @@ namespace Davr.Vash
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<IPageResponseService, PageResponseService>();
             services.AddScoped<IFieldFilter, FieldFilter>();
+            services.AddScoped<IJwtUtils, JwtUtils>();
 
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -59,10 +60,13 @@ namespace Davr.Vash
 
             // global error handler
             app.UseMiddleware<ErrorHandlerMiddleware>();
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
