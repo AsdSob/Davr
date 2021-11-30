@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Davr.Vash.Entities
 {
-    [Index(nameof(Name), IsUnique = true)]
+    [Index(nameof(Name), nameof(Code), IsUnique = true)]
     public class Currency : EntityBase
     {
         [Required]

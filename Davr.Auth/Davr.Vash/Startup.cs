@@ -113,19 +113,53 @@ namespace Davr.Vash
                     Username = "admin",
                     PasswordHash = BCryptNet.HashPassword("admin"),
                     Role = Role.Admin,
-                    Branch = new Branch()
-                    {
-                        Name = "Golovnoy"
-                    }
+                    BranchId = 1
                 });
 
-            var currencies = CreateCurrencies();
+            context.Users.Add(
+                new User
+                {
+                    FirstName = "User",
+                    LastName = "Userovich",
+                    Username = "user",
+                    PasswordHash = BCryptNet.HashPassword("user"),
+                    Role = Role.User,
+                    BranchId = 1
+                });
 
-            context.Currencies.AddRange(currencies);
+            context.Users.Add(
+                new User
+                {
+                    FirstName = "Super",
+                    LastName = "Superov",
+                    Username = "super",
+                    PasswordHash = BCryptNet.HashPassword("super"),
+                    Role = Role.Supervisor,
+                    BranchId = 1
+                });
+
+            context.Branches.AddRange(CreateBranches());
+            context.Currencies.AddRange(CreateCurrencies());
+            context.Citizens.AddRange(CreateCitizen());  
+            context.DocumentTypes.AddRange(CreateDocumentType());
+
+            context.SaveChanges();
+
+            context.Clients.AddRange(CreateTestClients());
 
             context.SaveChanges();
         }
 
+        private List<Branch> CreateBranches()
+        {
+            var branches = new List<Branch>()
+            {
+                new Branch() {Name = "Golovnoy"},
+                new Branch() {Name = "Olmazor"}
+            };
+
+            return branches;
+        }
 
         private List<Currency> CreateCurrencies()
         {
@@ -246,6 +280,87 @@ namespace Davr.Vash
             };
 
             return currencyList;
+        }
+        private List<Citizen> CreateCitizen()
+        {
+            var citizens = new List<Citizen>()
+            {
+                new Citizen()
+                {
+                    Name = "Узбекистан"
+                },new Citizen()
+                {
+                    Name = "Россия"
+                }
+            };
+
+            return citizens;
+        }
+        private List<DocumentType> CreateDocumentType()
+        {
+            var documentTypes = new List<DocumentType>()
+            {
+                new DocumentType() {Name = "Паспорт"},                
+                new DocumentType() {Name = "Загран Пасспорт"},
+                new DocumentType() {Name = "идентификационный документ"},
+            };
+
+            return documentTypes;
+        }
+
+        private List<Client> CreateTestClients()
+        {
+            var newClients = new List<Client>()
+            {
+                new Client()
+                {
+                    Name = "Maruf",
+                    SurName = " Abduvoqidov",
+                    MiddleSurName = "Sirojev",
+                    BirthDate = new DateTime(1991, 7, 20),
+                    BirthPlace = "Toshkent",
+                    DocumentIssueDate =  new DateTime(2010, 7, 3),
+                    DocumentAuthority = "IIB Toshkent",
+                    DocumentNumber = "123",
+                    DocumentSeries = "AA",
+                    DocumentTypeId = 1,
+                    Registration = "Usman Nosir 12-24",
+                    CitizenId = 2
+                },
+                new Client()
+                {
+                    Name = "Eshon",
+                    SurName = " Eshonov",
+                    MiddleSurName = "Eshon ugli",
+                    BirthDate = new DateTime(1989, 1, 1),
+                    BirthPlace = "Toshkent",
+                    DocumentIssueDate =  new DateTime(2012, 2, 23),
+                    DocumentAuthority = "IIB Toshkent",
+                    DocumentNumber = "321",
+                    DocumentSeries = "AB",
+                    DocumentTypeId = 2,
+                    Registration = "Olmazor 55 dom, 4 kv",
+                    CitizenId = 1
+                },
+
+                new Client()
+                {
+                    Name = "Saidov",
+                    SurName = "Popov",
+                    MiddleSurName = "Petrovich",
+                    BirthDate = new DateTime(1980, 9, 3),
+                    BirthPlace = "Buxoro",
+                    DocumentIssueDate =  new DateTime(2020, 1, 10),
+                    DocumentAuthority = "IIB Fargona",
+                    DocumentNumber = "0000",
+                    DocumentSeries = "BB",
+                    DocumentTypeId = 1,
+                    Registration = "Lininskaya, 2 kv, dom 123-45",
+                    CitizenId = 1
+                }
+            };
+
+            return newClients;
         }
     }
 }

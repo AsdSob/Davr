@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -22,6 +23,27 @@ namespace Davr.Vash.Controllers
         [HttpGet]
         public override async Task<IActionResult> GetAll(PageRequestFilter pageRequest)
         {
+            // Access by role
+            var currentUser = (User)HttpContext.Items["User"];
+
+            var roleFilter = new FieldFilter();
+
+            if (currentUser.Role == Role.Supervisor)
+            {
+                roleFilter = new FieldFilter() {f = "branchId", v = "[eq]" + currentUser.BranchId.ToString()};
+            }
+            else if(currentUser.Role == Role.User)
+            {
+                roleFilter = new FieldFilter() {f = "userId", v = "[eq]" + currentUser.BranchId.ToString()};
+            }
+
+            if (!String.IsNullOrWhiteSpace(roleFilter.f))
+            {
+                pageRequest.filters = pageRequest.filters == null
+                    ? new FieldFilter[] {roleFilter}
+                    : pageRequest.filters.Concat(new[] {roleFilter}).ToArray();
+            }
+
             //Set page response
             var pageResponse = _pageResponseService.GetPageResponse<ExchangeTransactionDto>(pageRequest);
 
@@ -29,13 +51,31 @@ namespace Davr.Vash.Controllers
             var expression = pageRequest.filters.FiltersToExpression<ExchangeTransaction>();
 
             //Get entities filtered with expression
-            var models = _dbContext._context.ExchangeTransactions
-                .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
-                .Take(pageResponse.PageSize)
-                .Include(x=> x.Branch)
-                .Include(x=>x.Client)
-                .Include(x=> x.Currency)
-                .Include(x=> x.User);
+
+            var models = new List<ExchangeTransaction>();
+
+            if (expression == null)
+            {
+                models = _dbContext._context.ExchangeTransactions
+                    .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+                    .Take(pageResponse.PageSize)
+                    .Include(x => x.Branch)
+                    .Include(x => x.Client)
+                    .Include(x => x.Currency)
+                    .Include(x => x.User).ToList();
+            }
+            else
+            {
+                models = _dbContext._context.ExchangeTransactions
+                    .Where(expression)
+                    .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+                    .Take(pageResponse.PageSize)
+                    .Include(x => x.Branch)
+                    .Include(x => x.Client)
+                    .Include(x => x.Currency)
+                    .Include(x => x.User).ToList();
+            }
+
 
             var dtos = _mapper.Map<IList<ExchangeTransactionDto>>(models).ToArray();
 
@@ -56,6 +96,8 @@ namespace Davr.Vash.Controllers
         public override async Task<IActionResult> Add(ExchangeTransactionDto tDto)
         {
             var exTran = _mapper.Map<ExchangeTransaction>(tDto);
+
+            if (tDto.Client == null) return BadRequest("Client object is not set ");
 
             if (tDto.Client.Id == 0)
             {
@@ -86,15 +128,11 @@ namespace Davr.Vash.Controllers
         [HttpPut("{id}")]
         public override async Task<IActionResult> Update(int id, ExchangeTransactionDto tDto)
         {
-            if (tDto == null)
-            {
-                return BadRequest("Owner object is null");
-            }
+            if (tDto == null) return BadRequest("Owner object is null");
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid model object");
-            }
+            if (tDto.Client == null) return BadRequest("Client object is not set ");
+
+            if (!ModelState.IsValid) return BadRequest("Invalid model object");
 
             var entity = _dbContext.GetEntity<ExchangeTransaction>(id).Result;
 
@@ -108,10 +146,6 @@ namespace Davr.Vash.Controllers
             var updateClient = _mapper.Map<Client>(tDto.Client);
             updateClient.Id = exTran.Client.Id;
             exTran.Client = updateClient;
-
-
-
-
 
             await _dbContext.AddOrUpdateEntity(exTran);
 

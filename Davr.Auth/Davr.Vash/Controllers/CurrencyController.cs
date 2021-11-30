@@ -35,7 +35,7 @@ namespace Davr.Vash.Controllers
         [HttpPost]
         public override async Task<IActionResult> Add(CurrencyDto tDto)
         {
-            if (_dbContext._context.Currencies.Any(x => x.Name.ToUpper() == tDto.Name.ToUpper()))
+            if (_dbContext._context.Currencies.Any(x => x.Name.ToUpper() == tDto.Name.ToUpper() || x.Code == tDto.Code))
             {
                 return BadRequest($"{tDto.Name} Currency already exist");
             }

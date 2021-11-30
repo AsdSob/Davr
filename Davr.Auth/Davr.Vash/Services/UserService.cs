@@ -124,7 +124,11 @@ namespace Davr.Vash.Services
             {
                 user.Role = model.Role;
             }
-            
+            if (model.BranchId != 0)
+            {
+                user.BranchId = model.BranchId;
+            }
+
             _context.Users.Update(user);
             _context.SaveChanges();
         }
