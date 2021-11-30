@@ -101,7 +101,7 @@ namespace Davr.Vash.Controllers
 
             if (tDto.Client.Id == 0)
             {
-                exTran.Client = _mapper.Map<Client>(tDto);
+                exTran.Client = _mapper.Map<Client>(tDto.Client);
             }
             else
             {
