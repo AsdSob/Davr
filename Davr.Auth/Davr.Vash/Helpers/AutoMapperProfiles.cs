@@ -27,7 +27,11 @@ namespace Davr.Vash.Helpers
             CreateMap<ClientDto, Client>().ForMember(x => x.Id, y => y.Ignore());
 
             CreateMap<ExchangeTransaction, ExchangeTransactionDto>();
-            CreateMap<ExchangeTransactionDto, ExchangeTransaction>().ForMember(x => x.Id, y => y.Ignore());
+            CreateMap<ExchangeTransactionDto, ExchangeTransaction>()
+                .ForMember(x => x.Id, y => y.Ignore())
+                .ForMember(x=> x.Branch, y=> y.Ignore())
+                .ForMember(x=> x.Currency, y=> y.Ignore())
+                .ForMember(x=> x.User, y=> y.Ignore());
 
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>().ForMember(x => x.Id, y => y.Ignore());

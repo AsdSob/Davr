@@ -22,9 +22,9 @@ namespace Davr.Vash.DTOs
         public int UserId { get; set; }
 
 
-        //public virtual User User { get; set; }
-        //public virtual Currency Currency { get; set; }
-        //public virtual Client Client { get; set; }
-        //public virtual Branch Branch { get; set; }
+        public virtual UserDto User { get; set; }
+        public virtual CurrencyDto Currency { get; set; }
+        public virtual ClientDto Client { get; set; }
+        public virtual BranchDto Branch { get; set; }
     }
 }

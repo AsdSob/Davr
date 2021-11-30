@@ -10,6 +10,7 @@ namespace Davr.Vash.DTOs.Users
         public string Username { get; set; }
         public Role Role { get; set; }
         public string Token { get; set; }
+        public int BranchId { get; set; }
 
         public AuthenticateResponse(User user, string token)
         {
@@ -19,6 +20,7 @@ namespace Davr.Vash.DTOs.Users
             Username = user.Username;
             Role = user.Role;
             Token = token;
+            BranchId = user.BranchId;
         }
     }
 }

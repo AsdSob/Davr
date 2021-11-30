@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Davr.Vash.Authorization;
@@ -111,10 +112,140 @@ namespace Davr.Vash
                     LastName = "User",
                     Username = "admin",
                     PasswordHash = BCryptNet.HashPassword("admin"),
-                    Role = Role.Admin
+                    Role = Role.Admin,
+                    Branch = new Branch()
+                    {
+                        Name = "Golovnoy"
+                    }
                 });
 
+            var currencies = CreateCurrencies();
+
+            context.Currencies.AddRange(currencies);
+
             context.SaveChanges();
+        }
+
+
+        private List<Currency> CreateCurrencies()
+        {
+            var currencyList = new List<Currency>()
+            {
+                new Currency()
+                {
+                    Code = "860",
+                    Name = "УЗБЕКСКИЙ СУМ"
+                }, new Currency()
+                {
+                    Code = "840",
+                    Name = "ДОЛЛАP США"
+                },new Currency()
+                {
+                    Code = "978",
+                    Name = "ЕВРО"
+                }, new Currency()
+                {
+                    Code = "826",
+                    Name = "ФУНТ СТЕPЛИНГОВ"
+                },
+                new Currency()
+                {
+                    Code = "36",
+                    Name = "АВСТPАЛИЙСКИЙ ДОЛЛАP"
+                },                
+                new Currency()
+                {
+                    Code = "124",
+                    Name = "КАНАДСКИЙ ДОЛЛАP"
+                },                
+                new Currency()
+                {
+                    Code = "156",
+                    Name = "ЮАНЬ РЕНЛИЕНБИ"
+                },                new Currency()
+                {
+                    Code = "208",
+                    Name = "ДАТСКАЯ КPОНА"
+                },                new Currency()
+                {
+                    Code = "352",
+                    Name = "ИСЛАНДСКАЯ КPОНА"
+                },                new Currency()
+                {
+                    Code = "392",
+                    Name = "ЙЕНА ЯПОНСКАЯ"
+                },                new Currency()
+                {
+                    Code = "398",
+                    Name = "КАЗАХСКИЙ ТЕНГЕ"
+                },                new Currency()
+                {
+                    Code = "410",
+                    Name = "ЮЖНОКОРЕЙСКИЙ ВОН"
+                },                new Currency()
+                {
+                    Code = "414",
+                    Name = "КУВЕЙТСКИЙ ДИНАP"
+                },                new Currency()
+                {
+                    Code = "417",
+                    Name = "КЫРГЫЗСКИЙ СОМ"
+                },                new Currency()
+                {
+                    Code = "422",
+                    Name = "ЛИВАНСКИЙ ФУНТ"
+                },                new Currency()
+                {
+                    Code = "458",
+                    Name = "МАЛАЙЗИЙСКИЙ PИНГГИТ"
+                },                new Currency()
+                {
+                    Code = "643",
+                    Name = "РОССИЙСКИЙ РУБЛЬ"
+                },                new Currency()
+                {
+                    Code = "702",
+                    Name = "СИНГАПУPСКИЙ ДОЛЛАP"
+                },                new Currency()
+                {
+                    Code = "752",
+                    Name = "ШВЕДСКАЯ КPОНА"
+                },                new Currency()
+                {
+                    Code = "756",
+                    Name = "ШВЕЙЦАPСКИЙ ФPАНК"
+                },                new Currency()
+                {
+                    Code = "784",
+                    Name = "ДИPХАМ ОАЭ"
+                },                new Currency()
+                {
+                    Code = "792",
+                    Name = "ТУРЕЦКАЯ ЛИPА"
+                },                new Currency()
+                {
+                    Code = "795",
+                    Name = "ТУРКМЕНСКИЙ МАНАТ"
+                },      new Currency()
+                {
+                    Code = "818",
+                    Name = "ЕГИПЕТСКИЙ ФУНТ"
+                },  new Currency()
+                {
+                    Code = "902",
+                    Name = "ЧOMBE КОНГО ТРОПИЧЕСКАЯ"
+                }, new Currency()
+                {
+                    Code = "949",
+                    Name = "НОВАЯ ТУРЕЦКАЯ ЛИРА"
+                },  new Currency()
+                {
+                    Code = "980",
+                    Name = "УКРАИНСКАЯ ГРИВНЯ"
+                }, 
+            };
+
+            return currencyList;
         }
     }
 }

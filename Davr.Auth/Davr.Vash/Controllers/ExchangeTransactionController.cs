@@ -31,7 +31,11 @@ namespace Davr.Vash.Controllers
             //Get entities filtered with expression
             var models = _dbContext._context.ExchangeTransactions
                 .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
-                .Take(pageResponse.PageSize);
+                .Take(pageResponse.PageSize)
+                .Include(x=> x.Branch)
+                .Include(x=>x.Client)
+                .Include(x=> x.Currency)
+                .Include(x=> x.User);
 
             var dtos = _mapper.Map<IList<ExchangeTransactionDto>>(models).ToArray();
 
@@ -49,9 +53,26 @@ namespace Davr.Vash.Controllers
         }
 
         [HttpPost]
-        public override Task<IActionResult> Add(ExchangeTransactionDto tDto)
+        public override async Task<IActionResult> Add(ExchangeTransactionDto tDto)
         {
-            return base.Add(tDto);
+            var exTran = _mapper.Map<ExchangeTransaction>(tDto);
+
+            if (tDto.Client.Id == 0)
+            {
+                exTran.Client = _mapper.Map<Client>(tDto);
+            }
+            else
+            {
+                exTran.Client.Id = tDto.Client.Id;
+                var updateClient = _mapper.Map<Client>(tDto.Client);
+                updateClient.Id = exTran.Client.Id;
+                exTran.Client = updateClient;
+            }
+
+            await _dbContext.AddOrUpdateEntity(exTran);
+
+            return Ok();
+            //return base.Add(tDto);
         }
 
         [Authorize(Role.Admin)]
@@ -63,9 +84,39 @@ namespace Davr.Vash.Controllers
 
         [Authorize(Role.Admin)]
         [HttpPut("{id}")]
-        public override Task<IActionResult> Update(int id, ExchangeTransactionDto tDto)
+        public override async Task<IActionResult> Update(int id, ExchangeTransactionDto tDto)
         {
-            return base.Update(id, tDto);
+            if (tDto == null)
+            {
+                return BadRequest("Owner object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid model object");
+            }
+
+            var entity = _dbContext.GetEntity<ExchangeTransaction>(id).Result;
+
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            var exTran = _mapper.Map(tDto, entity);
+
+            var updateClient = _mapper.Map<Client>(tDto.Client);
+            updateClient.Id = exTran.Client.Id;
+            exTran.Client = updateClient;
+
+
+
+
+
+            await _dbContext.AddOrUpdateEntity(exTran);
+
+            return Ok();
+            //return base.Update(id, tDto);
         }
     }
 }

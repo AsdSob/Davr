@@ -6,10 +6,12 @@ using Davr.Gumon.Authorization;
 using Davr.Gumon.DataAccess;
 using Davr.Gumon.Entities.Abstracts;
 using Davr.Gumon.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Gumon.Controllers.Abstracts
 {
+    [EnableCors("CorsApi")]
     [Authorize]
     [ApiController]
     [Route("[controller]")]

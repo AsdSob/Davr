@@ -6,6 +6,7 @@ namespace Davr.Vash.Entities
 {
     public class CurrencyRate : EntityBase
     {
+        
         public double Rate { get; set; }
 
         [Required]

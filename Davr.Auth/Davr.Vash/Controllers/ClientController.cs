@@ -30,8 +30,17 @@ namespace Davr.Vash.Controllers
             var expression = pageRequest.filters.FiltersToExpression<Client>();
 
             //Get entities filtered with expression
-            var models = _dbContext._context.Clients.Skip((pageResponse.Page - 1) * pageResponse.PageSize)
-                .Take(pageResponse.PageSize).Include(x => x.DocumentType).Include(x => x.Citizen);
+            var models = new List<Client>();
+            if (expression == null)
+            {
+               models = _dbContext._context.Clients.Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+                    .Take(pageResponse.PageSize).Include(x => x.DocumentType).Include(x => x.Citizen).ToList();
+            }
+            else
+            {
+                models = _dbContext._context.Clients.Where(expression).Skip((pageResponse.Page - 1) * pageResponse.PageSize)
+                    .Take(pageResponse.PageSize).Include(x => x.DocumentType).Include(x => x.Citizen).ToList();
+            }
 
             var dtos = _mapper.Map<IList<ClientDto>>(models).ToArray();
 

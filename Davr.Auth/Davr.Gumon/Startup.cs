@@ -33,6 +33,16 @@ namespace Davr.Gumon
             services.AddDbContext<DataContext>();
             services.Configure<AppSettings>(Configuration.GetSection("ConnectionStrings"));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsApi",
+                    builder => builder.WithOrigins("http://localhost:4200", "http://mywebsite.com")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
+
+
+
             services.AddControllers().AddJsonOptions(x =>
             {
                 // serialize enums as strings in api responses (e.g. Role)
@@ -75,6 +85,8 @@ namespace Davr.Gumon
             app.UseMiddleware<JwtMiddleware>();
 
             app.UseRouting();
+
+            app.UseCors("CorsApi");
 
             app.UseAuthorization();
             app.UseAuthentication();

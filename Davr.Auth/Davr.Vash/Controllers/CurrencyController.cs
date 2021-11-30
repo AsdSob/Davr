@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Davr.Vash.Authorization;
 using Davr.Vash.Controllers.Abstracts;
@@ -31,9 +33,14 @@ namespace Davr.Vash.Controllers
 
         [Authorize(Role.Admin)]
         [HttpPost]
-        public override Task<IActionResult> Add(CurrencyDto tDto)
+        public override async Task<IActionResult> Add(CurrencyDto tDto)
         {
-            return base.Add(tDto);
+            if (_dbContext._context.Currencies.Any(x => x.Name.ToUpper() == tDto.Name.ToUpper()))
+            {
+                return BadRequest($"{tDto.Name} Currency already exist");
+            }
+
+            return  await base.Add(tDto);
         }
 
         [Authorize(Role.Admin)]

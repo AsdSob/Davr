@@ -31,6 +31,9 @@ namespace Davr.Vash.Services
 
             for (int i = 0; i < filters.Length; i++)
             {
+
+                if(filters[i] == null || filters[i].f ==null) continue;
+
                 var expProperty = Expression.Property(expParameter, filters[i].f.ToLower());
                 var expValue = GetConstantByMemberType(expProperty, filters[i].v);
                 var oper = filters[i].v.Substring(1, filters[i].v.IndexOf(']') - 1);
@@ -46,7 +49,7 @@ namespace Davr.Vash.Services
                     _ => null
                 };
 
-                expFinal = i == 0 ? expTemp : Expression.And(expFinal, expTemp);
+                expFinal = i == 0 ? expTemp : Expression.AndAlso(expFinal, expTemp);
             }
             
             // Lambda Expression
@@ -126,6 +129,12 @@ namespace Davr.Vash.Services
                 }
 
                 constant = Expression.Constant(value, typeof(double));
+            }
+            else if (propertyType == typeof(DateTime))
+            {
+                var valueStr = Convert.ToDateTime(strValue);
+
+                constant = Expression.Constant(valueStr, typeof(DateTime));
             }
 
             return constant;
