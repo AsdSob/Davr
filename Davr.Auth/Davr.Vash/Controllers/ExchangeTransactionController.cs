@@ -25,9 +25,7 @@ namespace Davr.Vash.Controllers
         {
             // Access by role
             var currentUser = (User)HttpContext.Items["User"];
-
             var roleFilter = new FieldFilter();
-
             if (currentUser.Role == Role.Supervisor)
             {
                 roleFilter = new FieldFilter() {f = "branchId", v = "[eq]" + currentUser.BranchId.ToString()};
@@ -76,20 +74,63 @@ namespace Davr.Vash.Controllers
                     .Include(x => x.User).ToList();
             }
 
+            var dtos = new List<ExchangeTransactionDto>();
 
-            var dtos = _mapper.Map<IList<ExchangeTransactionDto>>(models).ToArray();
+            foreach (var model in models)
+            {
+                var dto = _mapper.Map<ExchangeTransactionDto>(model);
 
+                dto.DocumentSeries = model.Client.DocumentSeries;
+                dto.DocumentTypeId = model.Client.DocumentTypeId;
+                dto.DocumentIssueDate = model.Client.DocumentIssueDate;
+                dto.DocumentNumber = model.Client.DocumentNumber;
+                dto.DocumentAuthority = model.Client.DocumentAuthority;
+                dto.Name = model.Client.Name;
+                dto.SurName = model.Client.SurName;
+                dto.MiddleSurName = model.Client.MiddleSurName;
+                dto.CitizenId = model.Client.CitizenId;
+                dto.BirthPlace = model.Client.BirthPlace;
+                dto.BirthDate = model.Client.BirthDate;
+                dto.Registration = model.Client.Registration;
+
+                dtos.Add(dto);
+            }
+
+            //var dtos = _mapper.Map<IList<ExchangeTransactionDto>>(models).ToArray();
+           
             pageResponse.Total = _dbContext.GetEntitiesCount<ExchangeTransaction>(expression);
 
-            pageResponse.Items = dtos;
+            pageResponse.Items = dtos.ToArray();
 
             return Ok(pageResponse);
         }
 
         [HttpGet("{id}")]
-        public override Task<IActionResult> Get(int id)
+        public override async Task<IActionResult> Get(int id)
         {
-            return base.Get(id);
+            var transaction = _dbContext._context.ExchangeTransactions
+                .Where(x => x.Id == id)
+                .Include(x => x.Branch)
+                .Include(x => x.Client)
+                .Include(x => x.Currency)
+                .Include(x => x.User).FirstOrDefault();
+
+            var transactionDto = _mapper.Map<ExchangeTransactionDto>(transaction);
+
+            transactionDto.DocumentSeries = transaction.Client.DocumentSeries;
+            transactionDto.DocumentTypeId = transaction.Client.DocumentTypeId;
+            transactionDto.DocumentIssueDate = transaction.Client.DocumentIssueDate;
+            transactionDto.DocumentNumber = transaction.Client.DocumentNumber;
+            transactionDto.DocumentAuthority = transaction.Client.DocumentAuthority;
+            transactionDto.Name = transaction.Client.Name;
+            transactionDto.SurName = transaction.Client.SurName;
+            transactionDto.MiddleSurName = transaction.Client.MiddleSurName;
+            transactionDto.CitizenId = transaction.Client.CitizenId;
+            transactionDto.BirthPlace = transaction.Client.BirthPlace;
+            transactionDto.BirthDate = transaction.Client.BirthDate;
+            transactionDto.Registration = transaction.Client.Registration;
+
+            return Ok(transactionDto);
         }
 
         [HttpPost]
@@ -97,22 +138,26 @@ namespace Davr.Vash.Controllers
         {
             var exTran = _mapper.Map<ExchangeTransaction>(tDto);
 
-            if (tDto.Client == null) return BadRequest("Client object is not set ");
+            // Search client with document number and series in DB
+            var existClient =_dbContext._context.Clients.FirstOrDefault(x =>
+                x.DocumentNumber == tDto.DocumentNumber && x.DocumentSeries == tDto.DocumentSeries);
 
-            if (tDto.Client.Id == 0)
+            var clientDto = _mapper.Map<ClientDto>(tDto);
+
+            //Create new Client
+            if (existClient == null || existClient.Id <= 0)
             {
-                exTran.Client = _mapper.Map<Client>(tDto.Client);
+                exTran.ClientId = 0;
+                exTran.Client = _mapper.Map<Client>(clientDto);
             }
             else
             {
-                exTran.Client.Id = tDto.Client.Id;
-                var updateClient = _mapper.Map<Client>(tDto.Client);
-                updateClient.Id = exTran.Client.Id;
-                exTran.Client = updateClient;
+                //Update client details and set ClientId ofr exchange transaction
+                exTran.ClientId = existClient.Id;
+                exTran.Client = _mapper.Map(clientDto, existClient);
             }
-
+            
             await _dbContext.AddOrUpdateEntity(exTran);
-
             return Ok();
             //return base.Add(tDto);
         }
@@ -130,8 +175,6 @@ namespace Davr.Vash.Controllers
         {
             if (tDto == null) return BadRequest("Owner object is null");
 
-            if (tDto.Client == null) return BadRequest("Client object is not set ");
-
             if (!ModelState.IsValid) return BadRequest("Invalid model object");
 
             var entity = _dbContext.GetEntity<ExchangeTransaction>(id).Result;
@@ -143,14 +186,17 @@ namespace Davr.Vash.Controllers
 
             var exTran = _mapper.Map(tDto, entity);
 
-            var updateClient = _mapper.Map<Client>(tDto.Client);
-            updateClient.Id = exTran.Client.Id;
-            exTran.Client = updateClient;
+            // Search client with document number and series in DB
+            var existClient = _dbContext._context.Clients.FirstOrDefault(x =>
+                x.DocumentNumber == tDto.DocumentNumber && x.DocumentSeries == tDto.DocumentSeries);
+
+            var clientDto = _mapper.Map<ClientDto>(tDto);
+
+            //Update client details and set ClientId for exchange transaction
+            exTran.Client = _mapper.Map(clientDto, existClient);
 
             await _dbContext.AddOrUpdateEntity(exTran);
-
             return Ok();
-            //return base.Update(id, tDto);
         }
     }
 }
