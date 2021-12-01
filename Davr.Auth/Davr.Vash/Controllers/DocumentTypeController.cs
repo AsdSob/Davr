@@ -12,7 +12,7 @@ namespace Davr.Vash.Controllers
 {
     public class DocumentTypeController : ApiControllerBase<DocumentType, DocumentTypeDto>
     {
-        public DocumentTypeController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
+        public DocumentTypeController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper, ILoggerManager logger) : base(pageService, dbContext, mapper, logger)
         {
         }
 

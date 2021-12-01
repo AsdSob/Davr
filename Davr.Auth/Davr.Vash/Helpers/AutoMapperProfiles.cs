@@ -11,9 +11,6 @@ namespace Davr.Vash.Helpers
             CreateMap<Currency, CurrencyDto>();
             CreateMap<CurrencyDto, Currency>().ForMember(x => x.Id, y => y.Ignore());
 
-            CreateMap<CurrencyRate, CurrencyRateDto>();
-            CreateMap<CurrencyRateDto, CurrencyRate>().ForMember(x => x.Id, y => y.Ignore());
-
             CreateMap<Citizen, CitizenDto>();
             CreateMap<CitizenDto, Citizen>().ForMember(x => x.Id, y => y.Ignore());
 

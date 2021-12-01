@@ -16,7 +16,7 @@ namespace Davr.Vash.Controllers
 {
     public class ExchangeTransactionController : ApiControllerBase<ExchangeTransaction, ExchangeTransactionDto>
     {
-        public ExchangeTransactionController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
+        public ExchangeTransactionController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper, ILoggerManager logger) : base(pageService, dbContext, mapper, logger)
         {
         }
 
@@ -58,7 +58,7 @@ namespace Davr.Vash.Controllers
                     .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
                     .Take(pageResponse.PageSize)
                     .Include(x => x.Branch)
-                    .Include(x => x.Client)
+                    .Include(x => x.Client).ThenInclude(x => x.Citizen)
                     .Include(x => x.Currency)
                     .Include(x => x.User).ToList();
             }
@@ -69,7 +69,7 @@ namespace Davr.Vash.Controllers
                     .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
                     .Take(pageResponse.PageSize)
                     .Include(x => x.Branch)
-                    .Include(x => x.Client)
+                    .Include(x => x.Client).ThenInclude(x => x.Citizen)
                     .Include(x => x.Currency)
                     .Include(x => x.User).ToList();
             }
@@ -92,6 +92,7 @@ namespace Davr.Vash.Controllers
                 dto.BirthPlace = model.Client.BirthPlace;
                 dto.BirthDate = model.Client.BirthDate;
                 dto.Registration = model.Client.Registration;
+                dto.Citizen = _mapper.Map<CitizenDto>(model.Client.Citizen);
 
                 dtos.Add(dto);
             }
@@ -111,7 +112,7 @@ namespace Davr.Vash.Controllers
             var transaction = _dbContext._context.ExchangeTransactions
                 .Where(x => x.Id == id)
                 .Include(x => x.Branch)
-                .Include(x => x.Client)
+                .Include(x => x.Client).ThenInclude(x=> x.Citizen)
                 .Include(x => x.Currency)
                 .Include(x => x.User).FirstOrDefault();
 
@@ -129,6 +130,8 @@ namespace Davr.Vash.Controllers
             transactionDto.BirthPlace = transaction.Client.BirthPlace;
             transactionDto.BirthDate = transaction.Client.BirthDate;
             transactionDto.Registration = transaction.Client.Registration;
+            transactionDto.Citizen = _mapper.Map<CitizenDto>(transaction.Client.Citizen);
+
 
             return Ok(transactionDto);
         }

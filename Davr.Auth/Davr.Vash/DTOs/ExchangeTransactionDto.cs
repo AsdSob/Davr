@@ -10,7 +10,7 @@ namespace Davr.Vash.DTOs
 
         public DateTime EntryDate { get; set; }
         public bool IsCash { get; set; }
-        public int CardNumber { get; set; }
+        public string CardNumber { get; set; }
         public string Comment { get; set; }
         public bool IsBuying { get; set; }
         public double Amount { get; set; }
@@ -65,5 +65,6 @@ namespace Davr.Vash.DTOs
         public virtual UserDto User { get; set; }
         public virtual CurrencyDto Currency { get; set; }
         public virtual BranchDto Branch { get; set; }
+        public virtual CitizenDto Citizen { get; set; }
     }
 }

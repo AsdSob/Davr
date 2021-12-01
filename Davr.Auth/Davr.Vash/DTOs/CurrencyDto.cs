@@ -13,5 +13,10 @@ namespace Davr.Vash.DTOs
 
         [Required(ErrorMessage = "Code is required")]
         public string Code { get; set; }
+
+        [Required]
+        public string Ccy { get; set; }
+
+        public double Rate { get; set; }
     }
 }

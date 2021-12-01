@@ -15,7 +15,7 @@ namespace Davr.Vash.Controllers
 {
     public class ClientController : ApiControllerBase<Client, ClientDto>
     {
-        public ClientController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
+        public ClientController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper, ILoggerManager logger) : base(pageService, dbContext, mapper, logger)
         {
 
         }

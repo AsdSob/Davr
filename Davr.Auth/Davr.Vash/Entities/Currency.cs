@@ -14,7 +14,11 @@ namespace Davr.Vash.Entities
         [Required]
         public string Code { get; set; }
 
-        public virtual CurrencyRate CurrencyRate { get; set; }
+        [Required] 
+        public string Ccy { get; set; }
+
+        public double Rate { get; set; }
+
         public ICollection<ExchangeTransaction> ExchangeTransactions { get; set; }
     }
 }

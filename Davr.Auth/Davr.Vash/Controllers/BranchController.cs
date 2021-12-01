@@ -12,7 +12,7 @@ namespace Davr.Vash.Controllers
 {
     public class BranchController : ApiControllerBase<Branch, BranchDto>
     {
-        public BranchController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
+        public BranchController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper, ILoggerManager logger) : base(pageService, dbContext, mapper, logger)
         {
 
         }

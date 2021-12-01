@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Davr.Vash.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Davr.Vash.Helpers
 {
     public class ErrorHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILoggerManager _logger;
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+        public ErrorHandlerMiddleware(RequestDelegate next, ILoggerManager logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -27,7 +31,9 @@ namespace Davr.Vash.Helpers
                 var response = context.Response;
                 response.ContentType = "application/json";
 
-                switch(error)
+                _logger.LogError(error.InnerException.Message + error.Message + " | " + error.ToString());
+
+                switch (error)
                 {
                     case AppException e:
                         // custom application error

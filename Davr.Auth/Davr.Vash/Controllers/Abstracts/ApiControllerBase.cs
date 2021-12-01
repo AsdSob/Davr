@@ -20,13 +20,16 @@ namespace Davr.Vash.Controllers.Abstracts
         protected readonly IPageResponseService _pageResponseService;
         protected readonly IDataAccessProvider _dbContext;
         protected readonly IMapper _mapper;
+        protected readonly ILoggerManager _logger;
 
 
-        public ApiControllerBase(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper)
+
+        public ApiControllerBase(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper, ILoggerManager logger)
         {
             _pageResponseService = pageService;
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         //sample of query with array object 

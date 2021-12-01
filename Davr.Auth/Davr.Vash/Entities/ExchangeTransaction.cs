@@ -8,7 +8,7 @@ namespace Davr.Vash.Entities
         public DateTime EntryDate { get; set; }
 
         public bool IsCash { get; set; }
-        public int CardNumber { get; set; }
+        public string CardNumber { get; set; }
         public string Comment { get; set; }
         public bool IsBuying { get; set; }
         public double Amount { get; set; }

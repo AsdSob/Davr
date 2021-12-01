@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -14,20 +15,72 @@ namespace Davr.Vash.Controllers
 {
     public class CurrencyController : ApiControllerBase<Currency,CurrencyDto>
     {
-        public CurrencyController(IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper)
-        {
+        private readonly ICurrencyRateCBService _currencyCBRate;
+        private readonly IMapper _mapper;
+        private readonly IDataAccessProvider _dbContext;
+        private readonly ILoggerManager _logger;
 
+        public CurrencyController(ILoggerManager logger, ICurrencyRateCBService currencyCbRate, IPageResponseService pageService, IDataAccessProvider dbContext, IMapper mapper) : base(pageService, dbContext, mapper, logger)
+        {
+            _currencyCBRate = currencyCbRate;
+            _mapper = mapper;
+            _dbContext = dbContext;
+            _logger = logger;
         }
 
         [HttpGet]
-        public override Task<IActionResult> GetAll(PageRequestFilter pageRequest)
+        public async override Task<IActionResult> GetAll([FromQuery] PageRequestFilter pageRequest)
         {
-            return base.GetAll(pageRequest);
+            //Set page response
+            var pageResponse = _pageResponseService.GetPageResponse<CurrencyDto>(pageRequest);
+
+            //Convert filter array to expression
+            var expression = pageRequest.filters.FiltersToExpression<Currency>();
+
+            var currencies = await _dbContext.GetEntities(
+                expression,
+                (pageResponse.Page - 1) * pageResponse.PageSize,
+                pageResponse.PageSize);
+
+            var currenciesDto = _mapper.Map<List<CurrencyDto>>(currencies);
+
+            foreach (var dto in currenciesDto.Where(x => x.Code != "860"))
+            {
+                _logger.LogInfo(dto.Code + dto.Name + dto.Rate);
+
+                dto.Rate = await _currencyCBRate.GetCurrency(dto.Code);
+            }
+
+            pageResponse.Total = _dbContext.GetEntitiesCount<Currency>(expression);
+            pageResponse.Items = currenciesDto.ToArray();
+
+            return Ok(pageResponse);
+
+            //_logger.LogInfo("running controler base");
+
+            //return base.GetAll(pageRequest);
         }
 
         [HttpGet("{id}")]
         public override Task<IActionResult> Get(int id)
         {
+            //var currency = _dbContext.GetEntity<Currency>(id).Result;
+
+            //var dto = _mapper.Map<CurrencyDto>(currency);
+
+            //if (dto.Code == "860")
+            //    return Ok(dto);
+            //try
+            //{
+            //    dto.Rate = await _currencyCBRate.GetCurrency(dto.Code);
+            //}
+            //catch (Exception e)
+            //{
+            //    return BadRequest(e);
+            //}
+
+            //return Ok(dto);
+
             return base.Get(id);
         }
 

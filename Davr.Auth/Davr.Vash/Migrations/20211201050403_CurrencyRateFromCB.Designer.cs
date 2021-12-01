@@ -3,15 +3,17 @@ using System;
 using Davr.Vash.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Davr.Vash.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211201050403_CurrencyRateFromCB")]
+    partial class CurrencyRateFromCB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,9 +124,6 @@ namespace Davr.Vash.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<double>("Rate")
-                        .HasColumnType("double precision");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name", "Code")
@@ -162,8 +161,8 @@ namespace Davr.Vash.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("CardNumber")
-                        .HasColumnType("text");
+                    b.Property<int>("CardNumber")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ClientId")
                         .HasColumnType("integer");

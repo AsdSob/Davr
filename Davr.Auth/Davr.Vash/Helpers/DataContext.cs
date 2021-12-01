@@ -24,7 +24,6 @@ namespace Davr.Vash.Helpers
 
         public DbSet<User> Users { get; set; }
         public DbSet<Currency> Currencies { get; set; }
-        public DbSet<CurrencyRate> CurrencyRates { get; set; }
         public DbSet<Citizen> Citizens { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Client> Clients { get; set; }
