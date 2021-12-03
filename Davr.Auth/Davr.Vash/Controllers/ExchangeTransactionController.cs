@@ -32,7 +32,7 @@ namespace Davr.Vash.Controllers
             }
             else if(currentUser.Role == Role.User)
             {
-                roleFilter = new FieldFilter() {f = "userId", v = "[eq]" + currentUser.BranchId.ToString()};
+                roleFilter = new FieldFilter() {f = "userId", v = "[eq]" + currentUser.Id.ToString()};
             }
 
             if (!String.IsNullOrWhiteSpace(roleFilter.f))
@@ -59,6 +59,7 @@ namespace Davr.Vash.Controllers
                     .Take(pageResponse.PageSize)
                     .Include(x => x.Branch)
                     .Include(x => x.Client).ThenInclude(x => x.Citizen)
+                    .Include(x=> x.Client).ThenInclude(x=>x.DocumentType)
                     .Include(x => x.Currency)
                     .Include(x => x.User).ToList();
             }
@@ -69,6 +70,7 @@ namespace Davr.Vash.Controllers
                     .Skip((pageResponse.Page - 1) * pageResponse.PageSize)
                     .Take(pageResponse.PageSize)
                     .Include(x => x.Branch)
+                    .Include(x=> x.Client).ThenInclude(x=>x.DocumentType)
                     .Include(x => x.Client).ThenInclude(x => x.Citizen)
                     .Include(x => x.Currency)
                     .Include(x => x.User).ToList();
@@ -93,6 +95,7 @@ namespace Davr.Vash.Controllers
                 dto.BirthDate = model.Client.BirthDate;
                 dto.Registration = model.Client.Registration;
                 dto.Citizen = _mapper.Map<CitizenDto>(model.Client.Citizen);
+                dto.DocumentType = _mapper.Map<DocumentTypeDto>(model.Client.DocumentType);
 
                 dtos.Add(dto);
             }
@@ -113,6 +116,7 @@ namespace Davr.Vash.Controllers
                 .Where(x => x.Id == id)
                 .Include(x => x.Branch)
                 .Include(x => x.Client).ThenInclude(x=> x.Citizen)
+                .Include(x => x.Client).ThenInclude(x=> x.DocumentType)
                 .Include(x => x.Currency)
                 .Include(x => x.User).FirstOrDefault();
 
@@ -131,6 +135,8 @@ namespace Davr.Vash.Controllers
             transactionDto.BirthDate = transaction.Client.BirthDate;
             transactionDto.Registration = transaction.Client.Registration;
             transactionDto.Citizen = _mapper.Map<CitizenDto>(transaction.Client.Citizen);
+            transactionDto.DocumentType = _mapper.Map<DocumentTypeDto>(transaction.Client.DocumentType);
+
 
 
             return Ok(transactionDto);

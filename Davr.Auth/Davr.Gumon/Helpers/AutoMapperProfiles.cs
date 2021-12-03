@@ -14,6 +14,12 @@ namespace Davr.Gumon.Helpers
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>().ForMember(x => x.Id, y => y.Ignore());
 
+            CreateMap<Currency, CurrencyDto>();
+            CreateMap<CurrencyDto, Currency>().ForMember(x => x.Id, y => y.Ignore());
+
+            CreateMap<TransactionStatus, TransactionStatusDto>();
+            CreateMap<TransactionStatusDto, TransactionStatus>().ForMember(x => x.Id, y => y.Ignore());
+
         }
 
     }

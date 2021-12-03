@@ -66,5 +66,6 @@ namespace Davr.Vash.DTOs
         public virtual CurrencyDto Currency { get; set; }
         public virtual BranchDto Branch { get; set; }
         public virtual CitizenDto Citizen { get; set; }
+        public virtual DocumentTypeDto DocumentType { get; set; }
     }
 }

@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Davr.Gumon.Authorization;
@@ -36,7 +37,7 @@ namespace Davr.Gumon
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsApi",
-                    builder => builder.WithOrigins("http://localhost:4200", "http://mywebsite.com")
+                    builder => builder.WithOrigins("http://localhost:8080", "http://mywebsite.com")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
@@ -109,13 +110,96 @@ namespace Davr.Gumon
                 new User
                 {
                     FirstName = "Admin",
-                    LastName = "User",
+                    MiddleName = "--",
+                    LastName = "Adminov",
                     Username = "admin",
                     PasswordHash = BCryptNet.HashPassword("admin"),
                     Role = Role.Admin
                 });
+            context.Users.Add(
+                new User
+                {
+                    FirstName = "Supervisor",
+                    MiddleName = "--",
+                    LastName = "Superviserovich",
+                    Username = "super",
+                    PasswordHash = BCryptNet.HashPassword("super"),
+                    Role = Role.Supervisor
+                });
+            context.Users.Add(
+                new User
+                {
+                    FirstName = "User",
+                    MiddleName = "--",
+                    LastName = "Userovich",
+                    Username = "user",
+                    PasswordHash = BCryptNet.HashPassword("user"),
+                    Role = Role.User
+                });
+
+
+
+            context.Branches.AddRange(GenerateBranches());
+            context.Currencies.AddRange(GenerateCurrencies());
+            context.TransactionStatuses.AddRange(GenerateTransactionStatus());
 
             context.SaveChanges();
+        }
+
+        private List<Branch> GenerateBranches()
+        {
+            var branches = new List<Branch>()
+            {
+                new Branch() {Name = "Golovnoy", Code = "1001"},
+                new Branch() {Name = "Olmazor", Code = "1001"}
+            };
+
+            return branches;
+        }
+
+        private List<Currency> GenerateCurrencies()
+        {
+            var currencyList = new List<Currency>()
+            {
+                new Currency() {Code = "860", Name = "УЗБЕКСКИЙ СУМ", Ccy = "UZS"},
+                new Currency() {Code = "840", Name = "ДОЛЛАP США", Ccy = "USD"},
+                new Currency() {Code = "978", Name = "ЕВРО", Ccy = "EUR"},
+                new Currency() {Code = "826", Name = "ФУНТ СТЕPЛИНГОВ", Ccy = "GBP"},
+                new Currency() {Code = "036", Name = "АВСТPАЛИЙСКИЙ ДОЛЛАP", Ccy = "AUD"},
+                new Currency() {Code = "124", Name = "КАНАДСКИЙ ДОЛЛАP", Ccy = "CAD"},
+                new Currency() {Code = "156", Name = "ЮАНЬ РЕНЛИЕНБИ", Ccy = "CNY"},
+                new Currency() {Code = "208", Name = "ДАТСКАЯ КPОНА", Ccy = "DKK"},
+                new Currency() {Code = "352", Name = "ИСЛАНДСКАЯ КPОНА", Ccy = "ISK"},
+                new Currency() {Code = "392", Name = "ЙЕНА ЯПОНСКАЯ", Ccy = "JPY"},
+                new Currency() {Code = "398", Name = "КАЗАХСКИЙ ТЕНГЕ", Ccy = "KZT"},
+                new Currency() {Code = "410", Name = "ЮЖНОКОРЕЙСКИЙ ВОН", Ccy = "KRW"},
+                new Currency() {Code = "414", Name = "КУВЕЙТСКИЙ ДИНАP", Ccy = "KWD"},
+                new Currency() {Code = "417", Name = "КЫРГЫЗСКИЙ СОМ", Ccy = "KGS"},
+                new Currency() {Code = "422", Name = "ЛИВАНСКИЙ ФУНТ", Ccy = "LBP"},
+                new Currency() {Code = "458", Name = "МАЛАЙЗИЙСКИЙ PИНГГИТ", Ccy = "MYR"},
+                new Currency() {Code = "643", Name = "РОССИЙСКИЙ РУБЛЬ", Ccy = "RUB"},
+                new Currency() {Code = "702", Name = "СИНГАПУPСКИЙ ДОЛЛАP", Ccy = "SGD"},
+                new Currency() {Code = "752", Name = "ШВЕДСКАЯ КPОНА", Ccy = "SEK"},
+                new Currency() {Code = "756", Name = "ШВЕЙЦАPСКИЙ ФPАНК", Ccy = "CHF"},
+                new Currency() {Code = "784", Name = "ДИPХАМ ОАЭ", Ccy = "AED"},
+                new Currency() {Code = "949", Name = "НОВАЯ ТУРЕЦКАЯ ЛИPА", Ccy = "TRY"},
+                new Currency() {Code = "934", Name = "ТУРКМЕНСКИЙ МАНАТ", Ccy = "TMT"},
+                new Currency() {Code = "818", Name = "ЕГИПЕТСКИЙ ФУНТ", Ccy = "EGP"},
+                new Currency() {Code = "980", Name = "УКРАИНСКАЯ ГРИВНЯ", Ccy = "UAH"},
+            };
+
+            return currencyList;
+        }
+
+        private List<TransactionStatus> GenerateTransactionStatus()
+        {
+            var statuses = new List<TransactionStatus>()
+            {
+                new TransactionStatus(){Name = "Утвержден"},
+                new TransactionStatus(){Name = "Введен"},
+            };
+
+            return statuses;
         }
     }
 }

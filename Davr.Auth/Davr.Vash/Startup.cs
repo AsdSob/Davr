@@ -34,12 +34,13 @@ namespace Davr.Vash
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>();
-            services.Configure<AppSettings>(Configuration.GetSection("ConnectionStrings"));
+            var conString = Configuration.GetSection("ConnectionStrings");
+            services.Configure<AppSettings>(conString);
 
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsApi",
-                    builder => builder.WithOrigins("http://localhost:4200", "http://mywebsite.com")
+                    builder => builder.WithOrigins("http://localhost:8080", "http://mywebsite.com")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
