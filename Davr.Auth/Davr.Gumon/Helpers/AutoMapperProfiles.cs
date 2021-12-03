@@ -20,6 +20,9 @@ namespace Davr.Gumon.Helpers
             CreateMap<TransactionStatus, TransactionStatusDto>();
             CreateMap<TransactionStatusDto, TransactionStatus>().ForMember(x => x.Id, y => y.Ignore());
 
+            CreateMap<OperationCriteria, OperationCriteriaDto>();
+            CreateMap<OperationCriteriaDto, OperationCriteria>().ForMember(x => x.Id, y => y.Ignore());
+
         }
 
     }

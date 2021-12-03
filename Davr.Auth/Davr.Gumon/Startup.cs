@@ -142,6 +142,7 @@ namespace Davr.Gumon
             context.Branches.AddRange(GenerateBranches());
             context.Currencies.AddRange(GenerateCurrencies());
             context.TransactionStatuses.AddRange(GenerateTransactionStatus());
+            context.OperationCriterias.AddRange(GenerateOperationCreatias());
 
             context.SaveChanges();
         }
@@ -200,6 +201,39 @@ namespace Davr.Gumon
             };
 
             return statuses;
+        }
+
+        private List<OperationCriteria> GenerateOperationCreatias()
+        {
+            var items = new List<OperationCriteria>()
+            {
+                new OperationCriteria(){Code = "501/1"},
+                new OperationCriteria(){Code = "501/2"},
+                new OperationCriteria(){Code = "502"},
+                new OperationCriteria(){Code = "503"},
+                new OperationCriteria(){Code = "504"},
+                new OperationCriteria(){Code = "505"},
+                new OperationCriteria(){Code = "506"},
+                new OperationCriteria(){Code = "507"},
+                new OperationCriteria(){Code = "508"},
+                new OperationCriteria(){Code = "509"},
+                new OperationCriteria(){Code = "510"},
+                new OperationCriteria(){Code = "511"},
+                new OperationCriteria(){Code = "512"},
+                new OperationCriteria(){Code = "513"},
+                new OperationCriteria(){Code = "514"},
+                new OperationCriteria(){Code = "515"},
+                new OperationCriteria(){Code = "516/1"},
+                new OperationCriteria(){Code = "516/2"},
+                new OperationCriteria(){Code = "517/1"},
+                new OperationCriteria(){Code = "517/2"},
+                new OperationCriteria(){Code = "518"},
+                new OperationCriteria(){Code = "519"},
+                new OperationCriteria(){Code = "520"},
+                new OperationCriteria(){Code = "521"},
+            };
+
+            return items;
         }
     }
 }

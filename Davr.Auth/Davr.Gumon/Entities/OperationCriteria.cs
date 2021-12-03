@@ -4,9 +4,13 @@ using Davr.Gumon.Entities.Abstracts;
 
 namespace Davr.Gumon.Entities
 {
-    public class TransactionStatus : EntityBase
+    public class OperationCriteria : EntityBase
     {
-        [Required] public string Name { get; set; }
+        public string Name { get; set; }
+
+        [Required]
+        public string Code { get; set; }
+
 
         public ICollection<TransactionSuspicious> TransactionSuspiciouses { get; set; }
 

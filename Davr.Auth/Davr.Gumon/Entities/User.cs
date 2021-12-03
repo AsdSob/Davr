@@ -19,5 +19,8 @@ namespace Davr.Gumon.Entities
         public string PasswordHash { get; set; }
 
         public virtual Branch Branch { get; set; }
+
+        public ICollection<TransactionSuspicious> TransactionSuspiciouses { get; set; }
+
     }
 }

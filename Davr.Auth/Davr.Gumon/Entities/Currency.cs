@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Davr.Gumon.Entities.Abstracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,9 @@ namespace Davr.Gumon.Entities
 
         [Required]
         public string Ccy { get; set; }
+
+        public ICollection<TransactionSuspicious> TransactionSuspiciouses { get; set; }
+
 
     }
 }
