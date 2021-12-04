@@ -37,18 +37,29 @@ namespace Davr.Vash
             var conString = Configuration.GetSection("ConnectionStrings");
             services.Configure<AppSettings>(conString);
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsApi",
-                    builder => { builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
-            });
+            services.AddCors();
 
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(builder =>
+            //    {
+            //        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            //    });
+            //});
+        
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("CorsApi",
+            //        builder => builder.WithOrigins("*", "192.168.70.105:8888")
+            //            .AllowAnyHeader()
+            //            .AllowAnyMethod());
+            //});
 
             services.AddControllers().AddJsonOptions(x =>
             {
                 // serialize enums as strings in api responses (e.g. Role)
                 x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+            }); 
 
 
             // configure DI for application services
@@ -81,16 +92,18 @@ namespace Davr.Vash
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Davr.Vash v1"));
             }
 
-            app.UseHttpsRedirection();
+            app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
 
             // global error handler
             app.UseMiddleware<ErrorHandlerMiddleware>();
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
 
-            app.UseRouting();
 
-            app.UseCors("CorsApi");
+            app.UseRouting();
+            //app.UseCors("CorsApi");
+
+            app.UseHttpsRedirection();
 
             app.UseAuthorization();
             app.UseAuthentication();

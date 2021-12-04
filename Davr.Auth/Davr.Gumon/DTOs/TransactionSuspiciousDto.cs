@@ -1,10 +1,10 @@
 ﻿using System;
-using Davr.Gumon.Entities.Abstracts;
 
-namespace Davr.Gumon.Entities
+namespace Davr.Gumon.DTOs
 {
-    public class TransactionSuspicious : EntityBase
+    public class TransactionSuspiciousDto
     {
+        public int Id { get; set; }
         public string Number { get; set; }
         public DateTime EntryDate { get; set; }
         public string CounterpartyName { get; set; }
@@ -22,10 +22,9 @@ namespace Davr.Gumon.Entities
         public int CurrencyId { get; set; }
         public int UserId { get; set; }
 
-
-        public TransactionStatus TransactionStatus { get; set; }
-        public OperationCriteria OperationCriteria { get; set; }
-        public Currency Currency { get; set; }
-        public User User { get; set; }
+        public TransactionStatusDto TransactionStatus { get; set; }
+        public OperationCriteriaDto OperationCriteria { get; set; }
+        public CurrencyDto Currency { get; set; }
+        public UserDto User { get; set; }
     }
 }

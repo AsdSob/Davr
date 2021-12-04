@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Davr.Gumon.Authorization;
 using Davr.Gumon.DataAccess;
+using Davr.Gumon.Entities;
 using Davr.Gumon.Entities.Abstracts;
 using Davr.Gumon.Services;
 using Microsoft.AspNetCore.Cors;
@@ -57,6 +58,7 @@ namespace Davr.Gumon.Controllers.Abstracts
             return Ok(pageResponse);
         }
 
+        [Authorize(Role.Admin)]
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
@@ -77,6 +79,7 @@ namespace Davr.Gumon.Controllers.Abstracts
             return Ok();
         }
 
+        [Authorize(Role.Admin)]
         [HttpPut("{id}")]
         public virtual async Task<IActionResult> Update(int id, [FromBody] TDto tDto)
         {
@@ -102,6 +105,7 @@ namespace Davr.Gumon.Controllers.Abstracts
             return Ok();
         }
 
+        [Authorize(Role.Admin)]
         [HttpDelete("{id}")]
         public virtual async Task<IActionResult> Delete(int id)
         {

@@ -37,7 +37,7 @@ namespace Davr.Gumon
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsApi",
-                    builder => builder.WithOrigins("http://localhost:8080", "http://mywebsite.com")
+                    builder => builder.WithOrigins("http://localhost:8080")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });

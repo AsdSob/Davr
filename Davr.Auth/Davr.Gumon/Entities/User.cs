@@ -13,7 +13,7 @@ namespace Davr.Gumon.Entities
         public Role Role { get; set; }
         
         
-        public int? BranchId { get; set; }
+        public int BranchId { get; set; }
 
         [JsonIgnore]
         public string PasswordHash { get; set; }
