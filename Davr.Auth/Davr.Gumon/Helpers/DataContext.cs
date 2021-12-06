@@ -27,5 +27,6 @@ namespace Davr.Gumon.Helpers
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<TransactionStatus> TransactionStatuses { get; set; }
         public DbSet<OperationCriteria> OperationCriterias { get; set; }
+        public DbSet<TransactionSuspicious> TransactionSuspiciouses { get; set; }
     }
 }

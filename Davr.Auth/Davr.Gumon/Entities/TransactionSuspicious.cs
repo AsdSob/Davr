@@ -21,11 +21,13 @@ namespace Davr.Gumon.Entities
         public int OperationCriteriaId { get; set; }
         public int CurrencyId { get; set; }
         public int UserId { get; set; }
+        public int BranchId { get; set; }
 
 
         public TransactionStatus TransactionStatus { get; set; }
         public OperationCriteria OperationCriteria { get; set; }
         public Currency Currency { get; set; }
+        public Branch Branch { get; set; }
         public User User { get; set; }
     }
 }

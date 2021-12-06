@@ -23,6 +23,10 @@ namespace Davr.Gumon.Helpers
             CreateMap<OperationCriteria, OperationCriteriaDto>();
             CreateMap<OperationCriteriaDto, OperationCriteria>().ForMember(x => x.Id, y => y.Ignore());
 
+            CreateMap<TransactionSuspicious, TransactionSuspiciousDto>();
+            CreateMap<TransactionSuspiciousDto, TransactionSuspicious>().ForMember(x => x.Id, y => y.Ignore());
+
+
         }
 
     }

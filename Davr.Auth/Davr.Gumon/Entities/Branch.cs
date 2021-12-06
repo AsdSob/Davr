@@ -12,6 +12,7 @@ namespace Davr.Gumon.Entities
         public string Code { get; set; }
 
         public ICollection<User> Users { get; set; }
+        public ICollection<TransactionSuspicious> TransactionSuspiciouses { get; set; }
 
     }
 }

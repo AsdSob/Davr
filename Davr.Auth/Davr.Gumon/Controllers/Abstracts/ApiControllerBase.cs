@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Gumon.Controllers.Abstracts
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ApiControllerBase<TModel, TDto> : ControllerBase where TModel : class, IEntity<int>
@@ -56,7 +56,6 @@ namespace Davr.Gumon.Controllers.Abstracts
             return Ok(pageResponse);
         }
 
-        [Authorize(Role.Admin)]
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
@@ -69,6 +68,7 @@ namespace Davr.Gumon.Controllers.Abstracts
             return Ok(dto);
         }
 
+        [Authorize(Role.Admin)]
         [HttpPost]
         public virtual async Task<IActionResult> Add([FromBody] TDto tDto)
         {

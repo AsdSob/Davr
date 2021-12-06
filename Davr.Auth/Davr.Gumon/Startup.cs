@@ -107,7 +107,8 @@ namespace Davr.Gumon
                     LastName = "Adminov",
                     Username = "admin",
                     PasswordHash = BCryptNet.HashPassword("admin"),
-                    Role = Role.Admin
+                    Role = Role.Admin,
+                    BranchId = 1
                 });
             context.Users.Add(
                 new User
@@ -117,7 +118,8 @@ namespace Davr.Gumon
                     LastName = "Superviserovich",
                     Username = "super",
                     PasswordHash = BCryptNet.HashPassword("super"),
-                    Role = Role.Supervisor
+                    Role = Role.Supervisor,
+                    BranchId = 1
                 });
             context.Users.Add(
                 new User
@@ -127,10 +129,9 @@ namespace Davr.Gumon
                     LastName = "Userovich",
                     Username = "user",
                     PasswordHash = BCryptNet.HashPassword("user"),
-                    Role = Role.User
+                    Role = Role.User,
+                    BranchId = 1
                 });
-
-
 
             context.Branches.AddRange(GenerateBranches());
             context.Currencies.AddRange(GenerateCurrencies());

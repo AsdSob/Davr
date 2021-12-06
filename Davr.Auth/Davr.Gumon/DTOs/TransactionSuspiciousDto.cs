@@ -5,6 +5,7 @@ namespace Davr.Gumon.DTOs
     public class TransactionSuspiciousDto
     {
         public int Id { get; set; }
+
         public string Number { get; set; }
         public DateTime EntryDate { get; set; }
         public string CounterpartyName { get; set; }
@@ -21,10 +22,13 @@ namespace Davr.Gumon.DTOs
         public int OperationCriteriaId { get; set; }
         public int CurrencyId { get; set; }
         public int UserId { get; set; }
+        public int BranchId { get; set; }
+
 
         public TransactionStatusDto TransactionStatus { get; set; }
         public OperationCriteriaDto OperationCriteria { get; set; }
         public CurrencyDto Currency { get; set; }
+        public BranchDto BranchDto { get; set; }
         public UserDto User { get; set; }
     }
 }
