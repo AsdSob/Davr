@@ -7,13 +7,11 @@ using Davr.Gumon.DataAccess;
 using Davr.Gumon.Entities;
 using Davr.Gumon.Entities.Abstracts;
 using Davr.Gumon.Services;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Gumon.Controllers.Abstracts
 {
-    [EnableCors("CorsApi")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ApiControllerBase<TModel, TDto> : ControllerBase where TModel : class, IEntity<int>

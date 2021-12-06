@@ -6,6 +6,7 @@ using Davr.Vash.DataAccess;
 using Davr.Vash.DTOs;
 using Davr.Vash.Entities;
 using Davr.Vash.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Vash.Controllers

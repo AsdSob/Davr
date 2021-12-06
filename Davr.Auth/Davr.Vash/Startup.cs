@@ -34,25 +34,18 @@ namespace Davr.Vash
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>();
+            services.AddCors();
+
             var conString = Configuration.GetSection("ConnectionStrings");
             services.Configure<AppSettings>(conString);
 
-            services.AddCors();
-
             //services.AddCors(options =>
             //{
-            //    options.AddDefaultPolicy(builder =>
-            //    {
-            //        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-            //    });
-            //});
-        
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("CorsApi",
-            //        builder => builder.WithOrigins("*", "192.168.70.105:8888")
-            //            .AllowAnyHeader()
-            //            .AllowAnyMethod());
+            //    options.AddPolicy(
+            //        "CorsPolicy",
+            //        builder => builder.AllowAnyOrigin()
+            //            .AllowAnyMethod()
+            //            .AllowAnyHeader());
             //});
 
             services.AddControllers().AddJsonOptions(x =>
@@ -60,7 +53,6 @@ namespace Davr.Vash
                 // serialize enums as strings in api responses (e.g. Role)
                 x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             }); 
-
 
             // configure DI for application services
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
@@ -92,27 +84,25 @@ namespace Davr.Vash
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Davr.Vash v1"));
             }
 
-            app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
+            app.UseRouting();
+            app.UseCors(x => x.AllowAnyMethod().SetIsOriginAllowed(x=> true).AllowAnyHeader());
 
             // global error handler
             app.UseMiddleware<ErrorHandlerMiddleware>();
-            // custom jwt auth middleware
-            app.UseMiddleware<JwtMiddleware>();
-
-
-            app.UseRouting();
-            //app.UseCors("CorsApi");
 
             app.UseHttpsRedirection();
+
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseAuthorization();
             app.UseAuthentication();
 
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
 
             if (!dataContext.Users.Any())
             {
@@ -237,7 +227,6 @@ namespace Davr.Vash
 
             return documentTypes;
         }
-
         private List<Client> CreateTestClients()
         {
             var newClients = new List<Client>()

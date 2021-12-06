@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Davr.Vash.Controllers.Abstracts
 {
-    [EnableCors]
     [Authorize]
     [ApiController]
     [Route("[controller]")]

@@ -32,17 +32,10 @@ namespace Davr.Gumon
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>();
-            services.Configure<AppSettings>(Configuration.GetSection("ConnectionStrings"));
+            services.AddCors();
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsApi",
-                    builder => builder.WithOrigins("http://localhost:8080")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
-            });
-
-
+            var conString = Configuration.GetSection("ConnectionStrings");
+            services.Configure<AppSettings>(conString);
 
             services.AddControllers().AddJsonOptions(x =>
             {
@@ -62,7 +55,7 @@ namespace Davr.Gumon
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Davr.Vash", Version = "v1" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "Davr.Gumon", Version = "v1" });
             });
         }
 
@@ -75,28 +68,28 @@ namespace Davr.Gumon
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Davr.Vash v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Davr.Gumon v2"));
             }
 
-            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseCors(x => x.AllowAnyMethod().SetIsOriginAllowed(x => true).AllowAnyHeader());
 
             // global error handler
             app.UseMiddleware<ErrorHandlerMiddleware>();
+
+            app.UseHttpsRedirection();
+
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
 
-            app.UseRouting();
-
-            app.UseCors("CorsApi");
-
             app.UseAuthorization();
             app.UseAuthentication();
+
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
 
             if (!dataContext.Users.Any())
             {
