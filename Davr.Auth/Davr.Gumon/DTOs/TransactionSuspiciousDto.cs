@@ -28,7 +28,7 @@ namespace Davr.Gumon.DTOs
         public TransactionStatusDto TransactionStatus { get; set; }
         public OperationCriteriaDto OperationCriteria { get; set; }
         public CurrencyDto Currency { get; set; }
-        public BranchDto BranchDto { get; set; }
+        public BranchDto Branch { get; set; }
         public UserDto User { get; set; }
     }
 }

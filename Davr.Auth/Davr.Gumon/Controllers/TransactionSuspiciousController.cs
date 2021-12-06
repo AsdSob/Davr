@@ -22,7 +22,6 @@ namespace Davr.Gumon.Controllers
 
         }
 
-
         [HttpGet]
         public override async Task<IActionResult> GetAll(PageRequestFilter pageRequest)
         {
@@ -100,7 +99,6 @@ namespace Davr.Gumon.Controllers
                 .ToList().FirstOrDefault();
 
             var transactionDto = _mapper.Map<TransactionSuspiciousDto>(transaction);
-
             return Ok(transactionDto);
         }
 
