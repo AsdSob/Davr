@@ -201,33 +201,35 @@ namespace Davr.Gumon
         {
             var items = new List<OperationCriteria>()
             {
-                new OperationCriteria(){Code = "501/1"},
-                new OperationCriteria(){Code = "501/2"},
-                new OperationCriteria(){Code = "502"},
-                new OperationCriteria(){Code = "503"},
-                new OperationCriteria(){Code = "504"},
-                new OperationCriteria(){Code = "505"},
-                new OperationCriteria(){Code = "506"},
-                new OperationCriteria(){Code = "507"},
-                new OperationCriteria(){Code = "508"},
-                new OperationCriteria(){Code = "509"},
-                new OperationCriteria(){Code = "510"},
-                new OperationCriteria(){Code = "511"},
-                new OperationCriteria(){Code = "512"},
-                new OperationCriteria(){Code = "513"},
-                new OperationCriteria(){Code = "514"},
-                new OperationCriteria(){Code = "515"},
-                new OperationCriteria(){Code = "516/1"},
-                new OperationCriteria(){Code = "516/2"},
-                new OperationCriteria(){Code = "517/1"},
-                new OperationCriteria(){Code = "517/2"},
-                new OperationCriteria(){Code = "518"},
-                new OperationCriteria(){Code = "519"},
-                new OperationCriteria(){Code = "520"},
-                new OperationCriteria(){Code = "521"},
+                new OperationCriteria(){Id= 1, Code = "501/1"},
+                new OperationCriteria(){Id= 2, Code = "501/2"},
+                new OperationCriteria(){Id= 3, Code = "502"},
+                new OperationCriteria(){Id= 5, Code = "503"},
+                new OperationCriteria(){Id= 7, Code = "504"},
+                new OperationCriteria(){Id= 8, Code = "505"},
+                new OperationCriteria(){Id= 9, Code = "506"},
+                new OperationCriteria(){Id= 10, Code = "507"},
+                new OperationCriteria(){Id= 11, Code = "508"},
+                new OperationCriteria(){Id= 12, Code = "509"},
+                new OperationCriteria(){Id= 13, Code = "510"},
+                new OperationCriteria(){Id= 14, Code = "511"},
+                new OperationCriteria(){Id= 15, Code = "512"},
+                new OperationCriteria(){Id= 16, Code = "513"},
+                new OperationCriteria(){Id= 17, Code = "514"},
+                new OperationCriteria(){Id= 18, Code = "515"},
+                new OperationCriteria(){Id= 19, Code = "516/1"},
+                new OperationCriteria(){Id= 20, Code = "516/2"},
+                new OperationCriteria(){Id= 21, Code = "517/1"},
+                new OperationCriteria(){Id= 22, Code = "517/2"},
+                new OperationCriteria(){Id= 23, Code = "518"},
+                new OperationCriteria(){Id= 24, Code = "519"},
+                new OperationCriteria(){Id= 25, Code = "520"},
+                new OperationCriteria(){Id= 26, Code = "521"},
             };
 
-            return items;
+            var ordered = items.OrderBy(x => x.Code);
+
+            return ordered.ToList();
         }
     }
 }
