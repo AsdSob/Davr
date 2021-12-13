@@ -2,34 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Davr.Gumon.Authorization;
 using Davr.Gumon.DataAccess;
-using Davr.Gumon.DTOs;
 using Davr.Gumon.Entities;
 using Davr.Gumon.Services;
-using IronXL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Davr.Gumon.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("[controller]")]
     public class TestController : ControllerBase
     {
 
         private readonly IDataAccessProvider _dbContext;
+        private readonly IReportService _reportService;
 
-        public TestController(IDataAccessProvider dataAccess)
+        public TestController(IDataAccessProvider dataAccess, IReportService reportService)
         {
             _dbContext = dataAccess;
+            _reportService = reportService;
         }
 
         [HttpPost("[action]")]
-        public virtual async Task<IActionResult> TransactionQty(PageRequestFilter pageRequest)
+        public virtual async Task<IActionResult> TransactionList(PageRequestFilter pageRequest)
         {
+            var transactions = GetTransactionSuspiciouses(pageRequest);
+            var report = _reportService.GenerateTransactionListReport(transactions);
 
+            return File(report.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Gumon-" + DateTime.Now.ToShortDateString() + ".xlsx");
+        }
+
+        private List<TransactionSuspicious> GetTransactionSuspiciouses(PageRequestFilter pageRequest)
+        {
             // Access by role
             var currentUser = (User)HttpContext.Items["User"];
             var roleFilter = new FieldFilter();
@@ -59,6 +65,7 @@ namespace Davr.Gumon.Controllers
                     .Include(x => x.Branch)
                     .Include(x => x.User)
                     .Include(x => x.OperationCriteria)
+                    .Include(x => x.Currency)
                     .ToList();
             }
             else
@@ -68,20 +75,11 @@ namespace Davr.Gumon.Controllers
                     .Include(x => x.Branch)
                     .Include(x => x.User)
                     .Include(x => x.OperationCriteria)
+                    .Include(x => x.Currency)
                     .ToList();
             }
 
-
-
-
-
-
-
-
-
-
-            return File(workbook.ToByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "Gumon-" + DateTime.Now.ToShortDateString() + ".xlsx");
+            return models;
         }
     }
 }
